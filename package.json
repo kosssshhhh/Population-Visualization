@@ -46,6 +46,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@tanstack/eslint-plugin-query": "^5.0.0-rc.4"
   }
 }
