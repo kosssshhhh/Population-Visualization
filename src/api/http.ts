@@ -13,7 +13,7 @@ export interface ICommunication {
 export class Http implements ICommunication {
   httpClient: AxiosInstance;
 
-  constructor(baseURL = 'http://localhost:8081/') {
+  constructor(baseURL = 'http://localhost:3000/') {
     const axiosConfig = {
       baseURL,
       withCredentials: true,

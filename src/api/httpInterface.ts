@@ -1,5 +1,5 @@
-import { ICommunication } from './http';
-import { Response } from 'http-proxy-middleware/dist/types';
+import {ICommunication} from './http';
+import {Response} from 'http-proxy-middleware/dist/types';
 
 export class HttpInterface {
   constructor(private apiClient: ICommunication) {
@@ -7,8 +7,19 @@ export class HttpInterface {
   }
 
   // TODO: Api 명세 대로 구현하기
-  getPopulation(){
+  getPopulation() {
     const url = '';
     return this.apiClient.get(url);
+  }
+
+  getData() {
+    const url = '/csv/data3.csv';
+    const options = {
+      headers: {
+        'content-type': 'text/csv',
+        //'Authorization': //in case you need authorisation
+      }
+    };
+    return this.apiClient.get(url, options);
   }
 }

@@ -1,7 +1,3 @@
-import {useSelector} from "react-redux";
-import {RootState} from "../redux/redux.type";
-
-
 const MainPage = () => {
 
   return <section>

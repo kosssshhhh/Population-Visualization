@@ -1,10 +1,10 @@
 import {Outlet} from "react-router-dom";
-import Header from "../component/Header";
+import HeaderComponent from "../component/common/header/Header.component";
 
 const Layout = () => {
   return (
       <>
-        <Header/>
+        <HeaderComponent/>
         <Outlet/>
       </>
   )
