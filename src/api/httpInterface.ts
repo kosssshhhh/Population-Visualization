@@ -1,9 +1,17 @@
+import { AxiosRequestConfig } from 'axios';
 import {ICommunication} from './http';
-import {Response} from 'http-proxy-middleware/dist/types';
+
 
 export class HttpInterface {
+  private defaultOptions;
   constructor(private apiClient: ICommunication) {
     this.apiClient = apiClient;
+    this.defaultOptions =  {
+      headers: {
+        'content-type': 'text/csv',
+        //'Authorization': //in case you need authorisation
+      }
+    };
   }
 
   // TODO: Api 명세 대로 구현하기
@@ -14,12 +22,10 @@ export class HttpInterface {
 
   getData() {
     const url = '/csv/data3.csv';
-    const options = {
-      headers: {
-        'content-type': 'text/csv',
-        //'Authorization': //in case you need authorisation
-      }
-    };
+    return this.apiClient.get(url, this.defaultOptions);
+  }
+
+  get(url: string, options: AxiosRequestConfig<any> = this.defaultOptions) {
     return this.apiClient.get(url, options);
   }
 }
