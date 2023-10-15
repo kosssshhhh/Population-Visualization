@@ -9,7 +9,7 @@ export class HttpInterface {
     this.defaultOptions =  {
       headers: {
         'content-type': 'text/csv',
-        //'Authorization': //in case you need authorisation
+        //'Authorization':  
       }
     };
   }
