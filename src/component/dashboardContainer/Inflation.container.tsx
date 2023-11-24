@@ -7,7 +7,7 @@ type ProcessCell = {
   price: number | null;
 };
 
-// 사교육비, 물가,  
+// 사교육비, 물가,
 export default function Inflation() {
   const {
     isLoading: isLoadingEdu,
@@ -26,7 +26,7 @@ export default function Inflation() {
     );
   }
 
-  return <div></div>;
+  return <div>데이터 수:{processedEduData.length}</div>;
 }
 
 function processedEduData(arr: CSVRow[]) {
