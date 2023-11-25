@@ -1,9 +1,12 @@
 const fs = require("fs");
 const csv = require("csv-parser");
+const path = require("path");
 
 let data = [];
 
-fs.createReadStream("population.csv")
+const filePath = path.join(__dirname, "../csv/population.csv");
+
+fs.createReadStream(filePath)
   .pipe(csv())
   .on("data", (row) => {
     let age = row["연령별"];
