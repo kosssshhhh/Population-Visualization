@@ -7,18 +7,18 @@ type ProcessCell = {
   price: number | null;
 };
 
-// 사교육비, 물가,  
+// 사교육비, 물가, 임금 상승률, 집갑 비교
 export default function Inflation() {
   const {
     isLoading: isLoadingEdu,
     isError: isErrorEdu,
-    csvData: privateEduPrice,
+    csvData: privateEduPrice, // 사교육 데이터
   } = useFetchCSVData(apis.privateEduPrice);
 
-  let processingEduPrice: ProcessCell[] = [];
+  let processedEduPrice: ProcessCell[] = [];
 
   if (privateEduPrice?.data && privateEduPrice.data.length > 0) {
-    processingEduPrice = processedEduData(
+    processedEduPrice = processEduData(
       slice2DArray(privateEduPrice.data, {
         row: { start: 0, end: 4 },
         column: { start: 0, end: privateEduPrice.data[0].length },
@@ -26,10 +26,12 @@ export default function Inflation() {
     );
   }
 
+  
+
   return <div></div>;
 }
 
-function processedEduData(arr: CSVRow[]) {
+function processEduData(arr: CSVRow[]) {
   const results: ProcessCell[] = [];
   for (let row = 0; row < arr.length; row++) {
     for (let col = 0; col < arr[row].length; col++) {
