@@ -21,6 +21,7 @@ export default function Married() {
     isError: isErrorDivorce,
     csvData: divorce,
   } = useFetchCSVData(apis.divorce);
+  console.log(married?.data);
 
   let processedMarriedData: ProcessedCell[] = [];
   let processedDivorceData: ProcessedCell[] = [];
@@ -31,11 +32,12 @@ export default function Married() {
     processedDivorceData = processingPopulationData(divorce.data);
   }
 
+  // console.log(processedMarriedData);
+
   return (
     <DashboardContainer
       isLoading={isLoadingMarried && isLoadingDivorce}
-      isError={isErrorMarried && isErrorDivorce}
-    >
+      isError={isErrorMarried && isErrorDivorce}>
       {processedMarriedData.length > 0 && (
         <p>결혼 데이터 수신 완료 {processedMarriedData.length}</p>
       )}
