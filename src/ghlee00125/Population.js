@@ -27,10 +27,10 @@ function Population() {
     .scaleLinear()
     .domain([0, d3.max(data, (d) => d.people)])
     .rangeRound([defaultHeight - margin.bottom, margin.top]);
-  const color = d3
-    .scaleSequential()
-    .domain([0, 90])
-    .interpolator(d3.interpolateBlues);
+  // const color = d3
+  //   .scaleSequential()
+  //   .domain([0, 90])
+  //   .interpolator(d3.interpolateBlues);
 
   useEffect(() => {
     const svg = d3
@@ -55,7 +55,7 @@ function Population() {
 
   useEffect(() => {
     const dx = (x.step() * (selectedYear - data[0].year)) / 5;
-    const t = svg.transition().duration(300); // 800ms로 변경
+    const t = svg.transition().duration(600); // 800ms로 변경
 
     let group = svg.selectAll(".myRect").data([null]); // 'g' 대신 클래스명 'myRect' 지정
     group = group.enter().append("g").attr("class", "myRect").merge(group); // 'g' 요소 생성 시 클래스명 'myRect' 지정
@@ -75,6 +75,16 @@ function Population() {
       .attr("y", (d) => y(0))
       .attr("width", x.bandwidth() - 1)
       .attr("height", 0)
+      .on("mouseover", function (e, d) {
+        d3.select("#tooltip")
+          .style("visibility", "visible")
+          .style("left", e.pageX + "px")
+          .style("top", e.pageY + "px")
+          .html(`인구수: ${d.people}`);
+      })
+      .on("mouseout", function () {
+        d3.select("#tooltip").style("visibility", "hidden");
+      })
       .merge(rect);
 
     rect
@@ -134,6 +144,18 @@ function Population() {
     <div>
       <svg ref={svgRef} />
       <div>
+        <div
+          id="tooltip"
+          style={{
+            position: "absolute",
+            visibility: "hidden",
+            backgroundColor: "white",
+            padding: "10px",
+            borderRadius: "5px",
+            boxShadow: "0 0 10px rgba(0, 0, 0, 0.25)",
+            pointerEvents: "none",
+          }}
+        ></div>
         <button
           onClick={() => setAnimate(!animate)}
           style={{
