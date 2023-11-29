@@ -79,13 +79,6 @@ export default function Aging() {
         data={{
           labels: processedAgingData.map((data) => data.year),
           datasets: [
-            // 전체 인구 데이터셋
-            {
-              label: '전체 인구',
-              data: processedAgingData.map((data) => data.population),
-              borderColor: 'rgba(75,192,192,1)',
-              fill: false,
-            },
             // 고령 인구 데이터셋
             {
               label: '고령 인구',
@@ -105,13 +98,13 @@ export default function Aging() {
             {
               label: '고령화 지수',
               data: processedAgingData.map((data) => data.aging),
-              borderColor: 'rgba(255,159,64,1)',
+              borderColor: '#D4D4D4',
               backgroundColor: processedAgingData.map((data) =>
                 data.aging !== null
                   ? data.aging >= 14
-                    ? 'rgba(255,0,0,0.5)'
-                    : 'rgba(0,0,255,0.5)'
-                  : 'rgba(0,0,255,0.5)'
+                    ? 'rgba(255,0,0,1)'
+                    : '#D4D4D4'
+                  : '#EF9034'
               ),
               pointRadius: 10,
               fill: false,
