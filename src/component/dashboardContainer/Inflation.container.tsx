@@ -5,7 +5,6 @@ import DashboardContainer from './DashboardContainer.container';
 // import LineDashboard from '../dashboard/LineDashboard';
 import { LineData } from './@types/data';
 import ReactECharts from 'echarts-for-react';
-import { ProcessEduCell } from './@types/cell';
 import {
   formattingEduData,
   formattingHousePriceData,
@@ -16,10 +15,17 @@ import {
   processPriceIdxData,
   processWageData,
 } from './@utils/preprocessingData';
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
+import { ECharts } from 'echarts';
 
 // 사교육비, 물가, 주택 가격
 export default function Inflation() {
+  let chart = useRef<ECharts>();
+
+  const onChartReadyCallback = (e: ECharts) => {
+    chart.current = e;
+  };
+
   const {
     isLoading: isLoadingEdu,
     isError: isErrorEdu,
@@ -58,15 +64,10 @@ export default function Inflation() {
       emphasis: {
         focus: 'series',
       },
-      encode: {
-        x: 'Year',
-        y: 'Income',
-        label: ['Country', 'Income'],
-        itemName: 'Year',
-        tooltip: ['Income'],
-      },
       type: 'line',
       smooth: true,
+      triggerEvent: true,
+      triggerLineEvent: true,
     }),
     []
   );
@@ -113,14 +114,17 @@ export default function Inflation() {
     animationDuration: 5000,
     width: '60%',
     height: 'auto',
+    textStyle: {
+      color: '#fff',
+    },
     xAxis: {
       type: 'category',
       data: eduDataset?.data.map((item) => item.x),
     },
     yAxis: {
       type: 'value',
-      data: ['a', 'b', 'c', 'd'],
     },
+    darkMode: true,
     series: [
       {
         name: '사교육비',
@@ -152,9 +156,23 @@ export default function Inflation() {
     },
   };
 
+  const onChartClick = (params: string) => {
+    console.log(params);
+  };
+
+  const onEvents = {
+    click: onChartClick,
+  };
+
   return (
     <DashboardContainer isLoading={isLoadingEdu} isError={isErrorEdu}>
-      {eduDataset && <ReactECharts option={options} />}
+      {eduDataset && (
+        <ReactECharts
+          onChartReady={onChartReadyCallback}
+          option={options}
+          onEvents={onEvents}
+        />
+      )}
     </DashboardContainer>
   );
 }
