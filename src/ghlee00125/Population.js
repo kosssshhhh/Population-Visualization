@@ -81,9 +81,7 @@ function Population() {
       .transition(t)
       .attr("y", (d) => y(d.people))
       .attr("height", (d) => y(0) - y(d.people))
-      .attr("fill", (d) =>
-        d.age >= 65 ? d3.interpolateBlues(1) : d3.interpolateBlues(0.5)
-      ); // 나이에 따라 색상 변경
+      .attr("fill", (d) => (d.age >= 65 ? "#EF9034" : "#D4D4D4")); // 나이에 따라 색상 변경
 
     group.transition(t).attr("transform", `translate(${-dx},0)`);
     let text = group.selectAll("text").data(
