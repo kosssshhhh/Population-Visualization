@@ -1,13 +1,24 @@
 import useFetchCSVData, { CSVRow } from '../../hooks/useFetchCSVData';
 import apis from '../../@constants/apis/api';
 import { slice2DArray } from '../../utils/sliceArray';
+import DashboardContainer from './DashboardContainer.container';
+// import LineDashboard from '../dashboard/LineDashboard';
+import { LineData } from './@types/data';
+import ReactECharts from 'echarts-for-react';
+import { ProcessEduCell } from './@types/cell';
+import {
+  formattingEduData,
+  formattingHousePriceData,
+  formattingPriceIdxData,
+  formattingWageData,
+  processEduData,
+  processHousePriceData,
+  processPriceIdxData,
+  processWageData,
+} from './@utils/preprocessingData';
+import { useMemo } from 'react';
 
-type ProcessCell = {
-  year: number;
-  price: number | null;
-};
-
-// 사교육비, 물가,
+// 사교육비, 물가, 주택 가격
 export default function Inflation() {
   const {
     isLoading: isLoadingEdu,
@@ -15,41 +26,135 @@ export default function Inflation() {
     csvData: privateEduPrice,
   } = useFetchCSVData(apis.privateEduPrice);
 
-  let processEduPrice: ProcessCell[] = [];
+  const {
+    isLoading: isLoadingPriceIdx,
+    isError: isErrorPriceIdx,
+    csvData: priceIndex,
+  } = useFetchCSVData(apis.priceIndex);
+
+  const {
+    isLoading: isLoadingWageIdx,
+    isError: isErrorWageIdx,
+    csvData: wageIndex,
+  } = useFetchCSVData(apis.wage);
+
+  const {
+    isLoading: isLoadingHousePriceIdx,
+    isError: isErrorHousePriceIdx,
+    csvData: housePriceIndex,
+  } = useFetchCSVData(apis.housePrice);
+
+  const seriesOption = useMemo(
+    () => ({
+      endLabel: {
+        show: true,
+        formatter: function (params: any) {
+          return `${params.seriesName} : ${params.value}`;
+        },
+      },
+      labelLayout: {
+        moveOverlap: 'shiftY',
+      },
+      emphasis: {
+        focus: 'series',
+      },
+      encode: {
+        x: 'Year',
+        y: 'Income',
+        label: ['Country', 'Income'],
+        itemName: 'Year',
+        tooltip: ['Income'],
+      },
+      type: 'line',
+      smooth: true,
+    }),
+    []
+  );
 
   if (!privateEduPrice?.data) return <>데이터 없음</>;
+  if (!priceIndex?.data) return <>데이터 없음</>;
+  if (!wageIndex?.data) return <>데이터 없음</>;
+  if (!housePriceIndex?.data) return <>데이터 없음</>;
+  if (!privateEduPrice?.data || !(privateEduPrice.data.length > 0))
+    return <></>;
 
-  if (privateEduPrice?.data && privateEduPrice.data.length > 0) {
-    processEduPrice = processEduData(
+  let eduDataset: LineData;
+  let priceIdxDataset: LineData;
+  let wageDataset: LineData;
+  let housePriceDataset: LineData;
+
+  eduDataset = formattingEduData(
+    'inflation',
+    processEduData(
       slice2DArray(privateEduPrice.data, {
         row: { start: 0, end: 4 },
         column: { start: 0, end: privateEduPrice.data[0].length },
       }) as CSVRow[]
-    );
-  }
+    )
+  );
 
-  return <div>데이터 수:{processEduPrice.length}</div>;
-}
+  priceIdxDataset = formattingPriceIdxData(
+    '물가상승지표',
+    processPriceIdxData(priceIndex.data)
+  );
 
-function processEduData(arr: CSVRow[]) {
-  const results: ProcessCell[] = [];
-  for (let row = 0; row < arr.length; row++) {
-    for (let col = 0; col < arr[row].length; col++) {
-      const idx = (col - 1) / 5;
-      if (row === 0 && (col - 1) % 5 === 0) {
-        results[idx] = {
-          year: parseInt(`${arr[row][col]}`),
-          price: null,
-        };
-      } else if (row === 3 && (col - 1) % 5 === 0) {
-        results[idx] = {
-          ...results[idx],
-          price: parseInt(`${arr[row][col]}`) * 10000,
-        };
-      } else {
-        continue;
-      }
-    }
-  }
-  return results;
+  wageDataset = formattingWageData(
+    '임금상승지표',
+    processWageData(wageIndex.data)
+  );
+
+  housePriceDataset = formattingHousePriceData(
+    '주택가격지표',
+    processHousePriceData(housePriceIndex.data)
+  );
+
+  const options = {
+    grid: { top: 8, right: 8, bottom: 24, left: 36 },
+    animationDuration: 5000,
+    width: '60%',
+    height: 'auto',
+    xAxis: {
+      type: 'category',
+      data: eduDataset?.data.map((item) => item.x),
+    },
+    yAxis: {
+      type: 'value',
+      data: ['a', 'b', 'c', 'd'],
+    },
+    series: [
+      {
+        name: '사교육비',
+        datasetId: '사교육비',
+        data: eduDataset?.data.map((item) => item.y),
+        ...seriesOption,
+      },
+      {
+        name: '물가상승지수',
+        datasetId: '물가상승지수',
+        data: priceIdxDataset?.data.map((item) => item.y),
+        ...seriesOption,
+      },
+      {
+        name: '월평균임금',
+        datasetId: '월평균임금',
+        data: wageDataset?.data.map((item) => item.y),
+        ...seriesOption,
+      },
+      {
+        name: '주택 가격',
+        datasetId: '주택 가격',
+        data: housePriceDataset?.data.map((item) => item.y),
+        ...seriesOption,
+      },
+    ],
+    tooltip: {
+      trigger: 'axis',
+    },
+  };
+
+  return (
+    <DashboardContainer isLoading={isLoadingEdu} isError={isErrorEdu}>
+      {eduDataset && <ReactECharts option={options} />}
+    </DashboardContainer>
+  );
 }

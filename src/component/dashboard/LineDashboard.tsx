@@ -1,9 +1,9 @@
 import React from 'react';
-import { NivoLineForm } from '../dashboardContainer/@types/nivo';
+import { LineForm } from '../dashboardContainer/@types/data';
 import { ResponsiveLine } from '@nivo/line';
 
 type Props = {
-  data: NivoLineForm;
+  data: LineForm;
 };
 
 export default function LineDashboard({ data }: Props) {

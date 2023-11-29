@@ -1,3 +1,4 @@
+import Cartogram from '../component/dashboardContainer/Cartogram';
 import Inflation from '../component/dashboardContainer/Inflation.container';
 import Married from '../component/dashboardContainer/Married.container';
 import Population from '../component/dashboardContainer/Population.container';
@@ -9,6 +10,7 @@ const MainPage = () => {
       <Population />
       <Married />
       <Inflation />
+      <Cartogram />
     </section>
   );
 };

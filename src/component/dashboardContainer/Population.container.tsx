@@ -42,8 +42,6 @@ const Population = () => {
     );
   }
 
-  console.log(totalPopulationData);
-
   return (
     <DashboardContainer isLoading={isLoading} isError={isError}>
       {totalPopulationData?.length > 0 && (

@@ -1,4 +1,4 @@
-export type NivoLineData = {
+export type LineData = {
   id: string | number;
   color: string;
   xLegend: string;
@@ -6,4 +6,4 @@ export type NivoLineData = {
   data: { x: number | string; y: number | string }[];
 };
 
-export type NivoLineForm = NivoLineData[];
+export type LineForm = LineData[];

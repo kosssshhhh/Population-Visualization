@@ -2,14 +2,9 @@ import React from 'react';
 import useFetchCSVData, { CSVRow } from '../../hooks/useFetchCSVData';
 import apis from '../../@constants/apis/api';
 import DashboardContainer from './DashboardContainer.container';
-import { NivoLineData, NivoLineForm } from './@types/nivo';
+import { LineData, LineForm } from './@types/data';
 import LineDashboard from '../dashboard/LineDashboard';
-
-type ProcessedCell = {
-  year: number;
-  count: number | null;
-  population: number | null;
-};
+import { ProcessMarriedCell } from './@types/cell';
 
 export default function Married() {
   const {
@@ -24,7 +19,7 @@ export default function Married() {
     csvData: divorce,
   } = useFetchCSVData(apis.divorce);
 
-  let data: NivoLineForm = [];
+  let data: LineForm = [];
   if (divorce?.data && divorce.data.length > 0) {
     data.push(
       formattingForNivoData('divorce', processingPopulationData(divorce.data))
@@ -47,7 +42,7 @@ export default function Married() {
 }
 
 function processingPopulationData<T>(arr: CSVRow[]) {
-  const results: ProcessedCell[] = [];
+  const results: ProcessMarriedCell[] = [];
   for (let row = 0; row < arr.length - 1; row++) {
     for (let col = 0; col < arr[row].length; col++) {
       if (col === 0) continue;
@@ -69,13 +64,16 @@ function processingPopulationData<T>(arr: CSVRow[]) {
   return results;
 }
 
-function formattingForNivoData(id: string, arr: ProcessedCell[]): NivoLineData {
+function formattingForNivoData(
+  id: string,
+  arr: ProcessMarriedCell[]
+): LineData {
   const result = {
     id,
     color: 'hsl(201, 70%, 50%)',
     xLegend: 'year',
     yLegend: 'count',
-  } as NivoLineData;
+  } as LineData;
   result.data = arr
     .filter((item) => item.year >= 2011)
     .map((item) => ({
