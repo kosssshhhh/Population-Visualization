@@ -1,7 +1,9 @@
 import React from 'react';
 import useFetchCSVData, { CSVRow } from '../../hooks/useFetchCSVData';
-import apis from '../../apis/api';
+import apis from '../../@constants/apis/api';
 import DashboardContainer from './DashboardContainer.container';
+import { NivoLineData, NivoLineForm } from './@types/nivo';
+import LineDashboard from '../dashboard/LineDashboard';
 
 type ProcessedCell = {
   year: number;
@@ -22,13 +24,16 @@ export default function Married() {
     csvData: divorce,
   } = useFetchCSVData(apis.divorce);
 
-  let processedMarriedData: ProcessedCell[] = [];
-  let processedDivorceData: ProcessedCell[] = [];
-  if (married?.data && married.data.length > 0) {
-    processedMarriedData = processingPopulationData(married.data);
-  }
+  let data: NivoLineForm = [];
   if (divorce?.data && divorce.data.length > 0) {
-    processedDivorceData = processingPopulationData(divorce.data);
+    data.push(
+      formattingForNivoData('divorce', processingPopulationData(divorce.data))
+    );
+  }
+  if (married?.data && married.data.length > 0) {
+    data.push(
+      formattingForNivoData('married', processingPopulationData(married.data))
+    );
   }
 
   return (
@@ -36,14 +41,7 @@ export default function Married() {
       isLoading={isLoadingMarried && isLoadingDivorce}
       isError={isErrorMarried && isErrorDivorce}
     >
-      {processedMarriedData.length > 0 && (
-        <p>결혼 데이터 수신 완료 {processedMarriedData.length}</p>
-      )}
-      {processedMarriedData.length === 0 && `데이터가 존재하지 않습니다.`}
-      {processedDivorceData.length > 0 && (
-        <p>이혼 데이터 수신 완료 {processedDivorceData.length}</p>
-      )}
-      {processedDivorceData.length === 0 && `데이터가 존재하지 않습니다.`}
+      {data.length > 0 && <LineDashboard data={data} />}
     </DashboardContainer>
   );
 }
@@ -69,4 +67,21 @@ function processingPopulationData<T>(arr: CSVRow[]) {
     }
   }
   return results;
+}
+
+function formattingForNivoData(id: string, arr: ProcessedCell[]): NivoLineData {
+  const result = {
+    id,
+    color: 'hsl(201, 70%, 50%)',
+    xLegend: 'year',
+    yLegend: 'count',
+  } as NivoLineData;
+  result.data = arr
+    .filter((item) => item.year >= 2011)
+    .map((item) => ({
+      x: item.year,
+      y: item.count!,
+    }));
+
+  return result;
 }

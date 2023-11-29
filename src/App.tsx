@@ -4,7 +4,7 @@ import MainPage from "./pages/MainPage";
 import Layout from "./pages/Layout";
 import useFetchCSVData from './hooks/useFetchCSVData';
 import LoadingSpinner from './component/common/loading/LoadingSpinner.component';
-import apis from './apis/api';
+import apis from './@constants/apis/api';
 import { useEffect } from 'react';
 
 

@@ -1,5 +1,5 @@
 import useFetchCSVData, { CSVRow } from '../../hooks/useFetchCSVData';
-import apis from '../../apis/api';
+import apis from '../../@constants/apis/api';
 import { slice2DArray } from '../../utils/sliceArray';
 
 type ProcessCell = {
@@ -15,10 +15,12 @@ export default function Inflation() {
     csvData: privateEduPrice,
   } = useFetchCSVData(apis.privateEduPrice);
 
-  let processingEduPrice: ProcessCell[] = [];
+  let processEduPrice: ProcessCell[] = [];
+
+  if (!privateEduPrice?.data) return <>데이터 없음</>;
 
   if (privateEduPrice?.data && privateEduPrice.data.length > 0) {
-    processingEduPrice = processedEduData(
+    processEduPrice = processEduData(
       slice2DArray(privateEduPrice.data, {
         row: { start: 0, end: 4 },
         column: { start: 0, end: privateEduPrice.data[0].length },
@@ -26,10 +28,10 @@ export default function Inflation() {
     );
   }
 
-  return <div>데이터 수:{processedEduData.length}</div>;
+  return <div>데이터 수:{processEduPrice.length}</div>;
 }
 
-function processedEduData(arr: CSVRow[]) {
+function processEduData(arr: CSVRow[]) {
   const results: ProcessCell[] = [];
   for (let row = 0; row < arr.length; row++) {
     for (let col = 0; col < arr[row].length; col++) {
