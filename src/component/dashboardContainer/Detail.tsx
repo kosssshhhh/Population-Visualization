@@ -38,6 +38,8 @@ function Detail() {
       // type: 'bar'
     }));
 
+  console.log(selectedItem);
+
   const options = {
     ...chartOption,
     grid: { top: 8, right: 8, bottom: 24, left: 100 },
@@ -49,7 +51,6 @@ function Detail() {
     },
     yAxis: {
       type: 'value',
-      // [0, 200000000, 400000000, 600000000, 800000000, 1000000000],
       min: 0,
       max: 1000000000,
       // scale: false,
@@ -58,8 +59,9 @@ function Detail() {
       selectedItem !== '주택가격지수'
         ? [
             {
-              name: selectedItem,
-              datasetId: selectedItem,
+              name: selectedItem === '월평균임금' ? '평균연봉' : selectedItem,
+              datasetId:
+                selectedItem === '월평균임금' ? '평균연봉' : selectedItem,
               data: selectedData.map((item) => item.value),
               ...seriesOption,
             },

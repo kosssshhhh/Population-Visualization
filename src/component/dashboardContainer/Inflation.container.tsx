@@ -130,6 +130,8 @@ function Inflation() {
   };
 
   const onChartClick = (params: any) => {
+    if (params.seriesName === '물가지수') return;
+
     setSelectedItem(params.seriesName);
     switch (params.seriesName) {
       case '사교육비':
@@ -137,9 +139,6 @@ function Inflation() {
         break;
       case '월평균임금':
         setSelectedData(wageData);
-        break;
-      case '물가지수':
-        setSelectedData(priceIdxData);
         break;
       case '주택가격지수':
       default:

@@ -5,6 +5,8 @@ import DashboardContainer from './DashboardContainer.container';
 import { LineData, LineForm } from './@types/data';
 import LineDashboard from '../dashboard/LineDashboard';
 import { ProcessMarriedCell } from './@types/cell';
+import ReactECharts from 'echarts-for-react';
+import { chartOption, seriesOption } from './@constants/echartOptions';
 
 export default function Married() {
   const {
@@ -19,6 +21,8 @@ export default function Married() {
     csvData: divorce,
   } = useFetchCSVData(apis.divorce);
 
+  if (!divorce?.data) return <></>;
+  if (!married?.data) return <></>;
   let data: LineForm = [];
   if (divorce?.data && divorce.data.length > 0) {
     data.push(
@@ -30,6 +34,33 @@ export default function Married() {
       formattingForNivoData('married', processingPopulationData(married.data))
     );
   }
+  const divorceData = processingPopulationData(divorce.data);
+  const marryData = processingPopulationData(married.data);
+
+  const options = {
+    ...chartOption,
+    xAxis: {
+      type: 'category',
+      data: divorceData.map((item) => item.year),
+    },
+    yAxis: {
+      type: 'value',
+    },
+    series: [
+      {
+        name: '이혼건수',
+        datasetId: '이혼건수',
+        data: divorceData.map((item) => item.count),
+        ...seriesOption,
+      },
+      {
+        name: '결혼건수',
+        datasetId: '결혼건수',
+        data: marryData.map((item) => item.count),
+        ...seriesOption,
+      },
+    ],
+  };
 
   return (
     <DashboardContainer
@@ -37,6 +68,7 @@ export default function Married() {
       isError={isErrorMarried && isErrorDivorce}
     >
       {data.length > 0 && <LineDashboard data={data} />}
+      <ReactECharts option={options} />
     </DashboardContainer>
   );
 }
@@ -61,7 +93,7 @@ function processingPopulationData<T>(arr: CSVRow[]) {
       }
     }
   }
-  return results;
+  return results.filter((item) => item.year >= 2011);
 }
 
 function formattingForNivoData(

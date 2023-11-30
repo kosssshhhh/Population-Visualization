@@ -259,7 +259,6 @@ export function processApartPriceData(arr: CSVRow[]) {
         throw new Error('cannot find size');
     }
   }
-  console.log(result);
 
   return result;
   // const srcValue = result.filter((item) => item.year >= 2011)[0].value;
