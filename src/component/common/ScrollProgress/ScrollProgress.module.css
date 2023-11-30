@@ -1,0 +1,17 @@
+.scroll-progress {
+  width: 80vh;
+  height: 10px;
+  background-color: #d4d4d4;
+  position: fixed;
+  border-radius: 10px;
+  /* 가장 상단에 고정 배치 */
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+}
+.progress {
+  border-radius: 10px;
+  height: 100%;
+  background-color: #ef9034;
+}

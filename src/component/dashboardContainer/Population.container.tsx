@@ -1,5 +1,5 @@
 import useFetchCSVData, { CSVRow } from '../../hooks/useFetchCSVData';
-import apis from '../../apis/api';
+import apis from '../../@constants/apis/api';
 import DashboardContainer from './DashboardContainer.container';
 import { slice2DArray } from '../../utils/sliceArray';
 
