@@ -1,5 +1,9 @@
 import React, { useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 import * as d3 from 'd3';
+
+import useObserver from '../../hooks/useObserver';
+import { opacityVariants } from '../../@constants/animation/animation';
 
 // import {
 //   Section,
@@ -16,6 +20,7 @@ const Cartogram = () => {
   // 카토그램
   const mapRef = useRef();
   const buttonRef = useRef();
+  const { ref, animation } = useObserver();
 
   useEffect(() => {
     let width = 1100;
@@ -418,7 +423,12 @@ const Cartogram = () => {
 
   return (
     <>
-      <section>
+      <motion.div
+        ref={ref}
+        initial='hidden'
+        animate={animation}
+        variants={opacityVariants}
+      >
         <div>
           <div>
             <h1>카토그램으로 보는 '대한민국 지도'</h1>
@@ -442,7 +452,7 @@ const Cartogram = () => {
           </span>
           <span>(출처: KBS×KAIST 문화기술대학원 박주용 교수 연구실)</span>
         </div>
-      </section>
+      </motion.div>
     </>
   );
 };

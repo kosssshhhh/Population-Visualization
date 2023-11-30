@@ -4,7 +4,7 @@ import HeaderComponent from "../component/common/header/Header.component";
 const Layout = () => {
   return (
       <>
-        <HeaderComponent/>
+        {/* <HeaderComponent/> */}
         <Outlet/>
       </>
   )

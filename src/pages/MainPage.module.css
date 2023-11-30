@@ -1,0 +1,10 @@
+.main-container {
+  display: flex;
+  justify-content: center;
+}
+.progress-container {
+  width: 15vw;
+}
+.dashboard-container {
+  flex: 1 1 auto;
+}
