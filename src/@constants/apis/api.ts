@@ -6,7 +6,8 @@ const apis = {
   housePrice: '/csv/housePrice.csv',
   marrySurvey: '/csv/marrySurvey.csv',
   priceIndex: '/csv/priceIndex.csv', // 물가지수
-  wage: 'csv/wage.csv',
+  wage: '/csv/wage.csv',
+  apartPrice: '/csv/apartPrice.csv',
 };
 
 export default apis;

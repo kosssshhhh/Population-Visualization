@@ -1,21 +1,32 @@
-export type ProcessIncreaseCell = {
+export type ProcessDefaultCell = {
   year: number;
-  increase: number | null;
+  value: number;
+};
+export type ProcessIncreaseCell = ProcessDefaultCell & {
+  increase: number;
 };
 
-export type ProcessEduCell = ProcessIncreaseCell & {
-  price: number | null;
+export type ProcessApartPriceCell = {
+  xs: ProcessDefaultCell[];
+  s: ProcessDefaultCell[];
+  m: ProcessDefaultCell[];
+  l: ProcessDefaultCell[];
+  xl: ProcessDefaultCell[];
 };
 
-export type ProcessPriceIdxCell = ProcessIncreaseCell & {
-  priceIdx: number;
-};
+// export type ProcessEduCell = ProcessIncreaseCell & {
+//   price: number | null;
+// };
 
-export type ProcessWageCell = ProcessIncreaseCell & {
-  wage: number;
-};
+// export type ProcessPriceIdxCell = ProcessIncreaseCell & {
+//   priceIdx: number;
+// };
 
-export type ProcessHousePriceCell = ProcessPriceIdxCell;
+// export type ProcessWageCell = ProcessIncreaseCell & {
+//   wage: number;
+// };
+
+// export type ProcessHousePriceCell = ProcessPriceIdxCell;
 
 export type ProcessMarriedCell = {
   year: number;

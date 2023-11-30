@@ -1,29 +1,25 @@
 import { CSVRow } from '../../../hooks/useFetchCSVData';
 import type {
-  ProcessEduCell,
-  ProcessHousePriceCell,
+  ProcessApartPriceCell,
+  ProcessDefaultCell,
   ProcessIncreaseCell,
-  ProcessPriceIdxCell,
-  ProcessWageCell,
 } from '../@types/cell';
 import type { LineData } from '../@types/data';
 
-export function processEduData(arr: CSVRow[]) {
-  const results: ProcessEduCell[] = [];
+export function processEduData(arr: CSVRow[]): ProcessIncreaseCell[] {
+  const results: ProcessIncreaseCell[] = [];
   for (let row = 0; row < arr.length; row++) {
     for (let col = 0; col < arr[row].length; col++) {
       const idx = (col - 1) / 5;
       if (row === 0 && (col - 1) % 5 === 0) {
         results[idx] = {
           year: parseInt(`${arr[row][col]}`),
-          price: null,
-          increase: null,
-        };
+        } as ProcessIncreaseCell;
       } else if (row === 3 && (col - 1) % 5 === 0) {
-        const price = parseInt(`${arr[row][col]}`) * 10000;
+        const value = parseInt(`${arr[row][col]}`) * 10000 * 12;
         results[idx] = {
           ...results[idx],
-          price,
+          value,
         };
       } else {
         continue;
@@ -31,15 +27,20 @@ export function processEduData(arr: CSVRow[]) {
     }
   }
 
-  const srcPrice = results.filter((item) => item.year >= 2011)[0].price;
+  const srcValue = results.filter((item) => item.year >= 2011)[0].value;
 
-  return results.map((item) => ({
-    ...item,
-    increase: (item.price! - srcPrice!) / srcPrice!,
-  }));
+  return results
+    .filter((item) => item.year >= 2011)
+    .map((item) => ({
+      ...item,
+      increase: (item.value - srcValue) / srcValue,
+    }));
 }
 
-export function formattingEduData(id: string, arr: ProcessEduCell[]): LineData {
+export function formattingEduData(
+  id: string,
+  arr: ProcessIncreaseCell[]
+): LineData {
   const result = {
     id,
     color: 'hsl(201, 70%, 50%)',
@@ -50,14 +51,14 @@ export function formattingEduData(id: string, arr: ProcessEduCell[]): LineData {
     .filter((item) => item.year >= 2011)
     .map((item) => ({
       x: item.year,
-      y: Math.round(item.increase! * 100) / 100,
+      y: Math.round(item.increase * 100) / 100,
     }));
 
   return result;
 }
 
-export function processPriceIdxData(arr: CSVRow[]) {
-  const results: ProcessPriceIdxCell[] = [];
+export function processPriceIdxData(arr: CSVRow[]): ProcessIncreaseCell[] {
+  const results: ProcessIncreaseCell[] = [];
   for (let row = 0; row < arr.length; row++) {
     for (let col = 0; col < arr[row].length; col++) {
       if (row === 0 && col === 0) continue;
@@ -65,24 +66,24 @@ export function processPriceIdxData(arr: CSVRow[]) {
       if (row === 0) {
         results[col - 1] = {
           year: parseInt(`${arr[row][col]}`),
-        } as ProcessPriceIdxCell;
+        } as ProcessIncreaseCell;
       }
       if (row === 1) {
         results[col - 1] = {
           ...results[col - 1],
-          priceIdx: parseFloat(`${arr[row][col]}`),
-        } as ProcessPriceIdxCell;
+          value: parseFloat(`${arr[row][col]}`),
+        } as ProcessIncreaseCell;
       } else {
         continue;
       }
     }
   }
-  const srcPriceIdx = results[1].priceIdx;
+  const srcValue = results[1].value;
   return results
     .filter((item) => item.year >= 2011)
     .map((item) => ({
       ...item,
-      increase: (item.priceIdx - srcPriceIdx) / srcPriceIdx,
+      increase: (item.value - srcValue) / srcValue,
     }));
 }
 
@@ -106,8 +107,8 @@ export function formattingPriceIdxData(
   return result;
 }
 
-export function processWageData(arr: CSVRow[]) {
-  const result: ProcessWageCell[] = [];
+export function processWageData(arr: CSVRow[]): ProcessIncreaseCell[] {
+  const result: ProcessIncreaseCell[] = [];
 
   for (let row = 0; row < arr.length; row++) {
     for (let col = 0; col < arr[row].length; col++) {
@@ -116,13 +117,13 @@ export function processWageData(arr: CSVRow[]) {
       if (row === 0) {
         result[col - 1] = {
           year: parseInt(`${arr[row][col]}`),
-        } as ProcessWageCell;
+        } as ProcessIncreaseCell;
       } else if (row === 1) {
-        const wage =
-          parseInt((arr[row][col] as string).split(',').join('')) * 1000;
+        const value =
+          parseInt((arr[row][col] as string).split(',').join('')) * 1000 * 12;
         result[col - 1] = {
           ...result[col - 1],
-          wage,
+          value,
         };
       } else {
         continue;
@@ -130,15 +131,17 @@ export function processWageData(arr: CSVRow[]) {
     }
   }
 
-  const srcWage = result[0].wage;
+  const srcValue = result[0].value;
 
-  return result.map((item) => ({
-    ...item,
-    increase: (item.wage - srcWage) / srcWage,
-  }));
+  return result
+    .filter((item) => item.year >= 2011)
+    .map((item) => ({
+      ...item,
+      increase: (item.value - srcValue) / srcValue,
+    }));
 }
 
-export function formattingWageData(id: string, arr: ProcessWageCell[]) {
+export function formattingWageData(id: string, arr: ProcessIncreaseCell[]) {
   const result = {
     id,
     color: 'hsl(201, 70%, 50%)',
@@ -155,8 +158,8 @@ export function formattingWageData(id: string, arr: ProcessWageCell[]) {
   return result;
 }
 
-export function processHousePriceData(arr: CSVRow[]) {
-  const result: ProcessHousePriceCell[] = [];
+export function processHousePriceData(arr: CSVRow[]): ProcessIncreaseCell[] {
+  const result: ProcessIncreaseCell[] = [];
 
   for (let row = 0; row < arr.length; row++) {
     for (let col = 0; col < arr[row].length; col++) {
@@ -165,11 +168,11 @@ export function processHousePriceData(arr: CSVRow[]) {
       if (row === 0) {
         result[col - 2] = {
           year: parseInt(`${arr[row][col]}`),
-        } as ProcessHousePriceCell;
+        } as ProcessIncreaseCell;
       } else if (row === 1) {
         result[col - 2] = {
           ...result[col - 2],
-          priceIdx: parseInt(`${arr[row][col]}`),
+          value: parseInt(`${arr[row][col]}`),
         };
       } else {
         continue;
@@ -177,12 +180,14 @@ export function processHousePriceData(arr: CSVRow[]) {
     }
   }
 
-  const srcIndex = result[0].priceIdx;
+  const srcValue = result.filter((item) => item.year >= 2011)[0].value;
 
-  return result.map((item) => ({
-    ...item,
-    increase: (item.priceIdx - srcIndex) / srcIndex,
-  }));
+  return result
+    .filter((item) => item.year >= 2011)
+    .map((item) => ({
+      ...item,
+      increase: (item.value - srcValue) / srcValue,
+    }));
 }
 
 export function formattingHousePriceData(
@@ -203,4 +208,66 @@ export function formattingHousePriceData(
     }));
 
   return result;
+}
+// : ProcessIncreaseCell[]
+type ApartSize = keyof ProcessApartPriceCell;
+export function processApartPriceData(arr: CSVRow[]) {
+  const result: ProcessApartPriceCell = {
+    xs: [],
+    s: [],
+    m: [],
+    l: [],
+    xl: [],
+  };
+
+  const averageSize = { xs: 40, s: 60, m: 85, l: 135, xl: 160 };
+
+  for (let row = 0; row < arr.length; row++) {
+    for (let col = 0; col < arr[row].length; col++) {
+      if (row === 0 && col === 0) continue;
+      if (col === 0) continue;
+      if (row === 0) {
+        for (const size in result) {
+          result[size as ApartSize][col - 1] = {
+            year: parseInt(`${arr[row][col]}`),
+          } as ProcessDefaultCell;
+        }
+      } else {
+        const size = checkSize(row);
+        const weight = averageSize[size];
+        result[size][col - 1] = {
+          ...result[size][col - 1],
+          value: parseInt(`${arr[row][col]}`) * 10000 * weight,
+        };
+      }
+    }
+  }
+
+  function checkSize(row: number): ApartSize {
+    switch (row) {
+      case 1:
+        return 'xs';
+      case 2:
+        return 's';
+      case 3:
+        return 'm';
+      case 4:
+        return 'l';
+      case 5:
+        return 'xl';
+      default:
+        throw new Error('cannot find size');
+    }
+  }
+  console.log(result);
+
+  return result;
+  // const srcValue = result.filter((item) => item.year >= 2011)[0].value;
+
+  // return result
+  //   .filter((item) => item.year >= 2011)
+  //   .map((item) => ({
+  //     ...item,
+  //     increase: (item.value - srcValue) / srcValue,
+  //   }));
 }

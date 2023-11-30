@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import useFetchCSVData, { CSVRow } from '../../hooks/useFetchCSVData';
 import apis from '../../@constants/apis/api';
 import { slice2DArray } from '../../utils/sliceArray';
@@ -15,12 +16,17 @@ import {
   processPriceIdxData,
   processWageData,
 } from './@utils/preprocessingData';
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { ECharts } from 'echarts';
+import Detail from './Detail';
+import { useInflationContext } from '../../context/InflationContext';
+import { seriesOption, chartOption } from './@constants/echartOptions';
 
 // 사교육비, 물가, 주택 가격
-export default function Inflation() {
+function Inflation() {
   let chart = useRef<ECharts>();
+  const { setSelectedItem, setSelectedData } = useInflationContext();
+  const [animationEffect, setAnimationEffect] = useState(false);
 
   const onChartReadyCallback = (e: ECharts) => {
     chart.current = e;
@@ -50,27 +56,12 @@ export default function Inflation() {
     csvData: housePriceIndex,
   } = useFetchCSVData(apis.housePrice);
 
-  const seriesOption = useMemo(
-    () => ({
-      endLabel: {
-        show: true,
-        formatter: function (params: any) {
-          return `${params.seriesName} : ${params.value}`;
-        },
-      },
-      labelLayout: {
-        moveOverlap: 'shiftY',
-      },
-      emphasis: {
-        focus: 'series',
-      },
-      type: 'line',
-      smooth: true,
-      triggerEvent: true,
-      triggerLineEvent: true,
-    }),
-    []
-  );
+  // 애니메이션은 최초 1회시에만 할 수 있도록
+  useEffect(() => {
+    setTimeout(() => {
+      setAnimationEffect(true);
+    }, 5500);
+  }, []);
 
   if (!privateEduPrice?.data) return <>데이터 없음</>;
   if (!priceIndex?.data) return <>데이터 없음</>;
@@ -79,44 +70,28 @@ export default function Inflation() {
   if (!privateEduPrice?.data || !(privateEduPrice.data.length > 0))
     return <></>;
 
-  let eduDataset: LineData;
-  let priceIdxDataset: LineData;
-  let wageDataset: LineData;
-  let housePriceDataset: LineData;
-
-  eduDataset = formattingEduData(
-    'inflation',
-    processEduData(
-      slice2DArray(privateEduPrice.data, {
-        row: { start: 0, end: 4 },
-        column: { start: 0, end: privateEduPrice.data[0].length },
-      }) as CSVRow[]
-    )
+  // 원 소스 데이터
+  const eduPriceData = processEduData(
+    slice2DArray(privateEduPrice.data, {
+      row: { start: 0, end: 4 },
+      column: { start: 0, end: privateEduPrice.data[0].length },
+    }) as CSVRow[]
   );
+  const priceIdxData = processPriceIdxData(priceIndex.data);
+  const wageData = processWageData(wageIndex.data);
+  const housePriceIdxData = processHousePriceData(housePriceIndex.data);
 
-  priceIdxDataset = formattingPriceIdxData(
-    '물가상승지표',
-    processPriceIdxData(priceIndex.data)
-  );
-
-  wageDataset = formattingWageData(
-    '임금상승지표',
-    processWageData(wageIndex.data)
-  );
-
-  housePriceDataset = formattingHousePriceData(
+  // 데이터를 기반으로 지수로 변경
+  const eduDataset = formattingEduData('사교육비지표', eduPriceData);
+  const priceIdxDataset = formattingPriceIdxData('물가상승지표', priceIdxData);
+  const wageIdxDataset = formattingWageData('임금상승지표', wageData);
+  const housePriceIdxDataset = formattingHousePriceData(
     '주택가격지표',
-    processHousePriceData(housePriceIndex.data)
+    housePriceIdxData
   );
 
   const options = {
-    grid: { top: 8, right: 8, bottom: 24, left: 36 },
-    animationDuration: 5000,
-    width: '60%',
-    height: 'auto',
-    textStyle: {
-      color: '#fff',
-    },
+    ...chartOption,
     xAxis: {
       type: 'category',
       data: eduDataset?.data.map((item) => item.x),
@@ -124,7 +99,6 @@ export default function Inflation() {
     yAxis: {
       type: 'value',
     },
-    darkMode: true,
     series: [
       {
         name: '사교육비',
@@ -133,31 +107,44 @@ export default function Inflation() {
         ...seriesOption,
       },
       {
-        name: '물가상승지수',
-        datasetId: '물가상승지수',
+        name: '물가지수',
+        datasetId: '물가지수',
         data: priceIdxDataset?.data.map((item) => item.y),
         ...seriesOption,
       },
       {
         name: '월평균임금',
         datasetId: '월평균임금',
-        data: wageDataset?.data.map((item) => item.y),
+        data: wageIdxDataset?.data.map((item) => item.y),
         ...seriesOption,
       },
       {
-        name: '주택 가격',
-        datasetId: '주택 가격',
-        data: housePriceDataset?.data.map((item) => item.y),
+        name: '주택가격지수',
+        datasetId: '주택가격지수',
+        data: housePriceIdxDataset?.data.map((item) => item.y),
         ...seriesOption,
       },
     ],
-    tooltip: {
-      trigger: 'axis',
-    },
+
+    animation: !animationEffect ? true : false,
   };
 
-  const onChartClick = (params: string) => {
-    console.log(params);
+  const onChartClick = (params: any) => {
+    setSelectedItem(params.seriesName);
+    switch (params.seriesName) {
+      case '사교육비':
+        setSelectedData(eduPriceData);
+        break;
+      case '월평균임금':
+        setSelectedData(wageData);
+        break;
+      case '물가지수':
+        setSelectedData(priceIdxData);
+        break;
+      case '주택가격지수':
+      default:
+        break;
+    }
   };
 
   const onEvents = {
@@ -166,13 +153,15 @@ export default function Inflation() {
 
   return (
     <DashboardContainer isLoading={isLoadingEdu} isError={isErrorEdu}>
-      {eduDataset && (
+      <section>
         <ReactECharts
           onChartReady={onChartReadyCallback}
           option={options}
           onEvents={onEvents}
         />
-      )}
+        <Detail />
+      </section>
     </DashboardContainer>
   );
 }
+export default React.memo(Inflation);
