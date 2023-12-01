@@ -24,16 +24,7 @@ export default function Married() {
   if (!divorce?.data) return <></>;
   if (!married?.data) return <></>;
   let data: LineForm = [];
-  if (divorce?.data && divorce.data.length > 0) {
-    data.push(
-      formattingForNivoData('divorce', processingPopulationData(divorce.data))
-    );
-  }
-  if (married?.data && married.data.length > 0) {
-    data.push(
-      formattingForNivoData('married', processingPopulationData(married.data))
-    );
-  }
+
   const divorceData = processingPopulationData(divorce.data);
   const marryData = processingPopulationData(married.data);
 
@@ -68,7 +59,7 @@ export default function Married() {
       isLoading={isLoadingMarried && isLoadingDivorce}
       isError={isErrorMarried && isErrorDivorce}
     >
-      {data.length > 0 && <LineDashboard data={data} />}
+      {/* {data.length > 0 && <LineDashboard data={data} />} */}
       <ReactECharts option={options} />
     </DashboardContainer>
   );
