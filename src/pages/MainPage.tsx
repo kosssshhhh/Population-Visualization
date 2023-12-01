@@ -11,6 +11,7 @@ import Aging from '../component/dashboardContainer/Aging.container';
 import { pageStyle } from '../@constants/style/style';
 import NewsHeadline from '../component/common/comments/NewsHeadline';
 import AgingIndex from '../component/dashboardContainer/AgingIndex.container';
+import PopulationPyramid from '../component/dashboardContainer/PopulationPyramid.container';
 
 const MainPage = () => {
   return (
@@ -31,6 +32,7 @@ const MainPage = () => {
         <Aging />
         <Cartogram />
         <AgingIndex />
+        <PopulationPyramid />
       </div>
     </main>
   );

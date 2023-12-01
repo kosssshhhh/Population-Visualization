@@ -38,6 +38,19 @@ const options = {
     animation: {
       duration: 2000,
     },
+    // tooltip: {
+    //   callbacks: {
+    //     label: function (data: ProcessedCell[]) {
+    //       const index = data[0].dataIndex;
+    //       const aging = processingAgingData[index].aging;
+    //       if (aging >= 14) {
+    //         return `고령 사회`;
+    //       } else {
+    //         return `고령화 사회`;
+    //       }
+    //     },
+    //   },
+    // },
   },
 };
 
@@ -59,16 +72,12 @@ export default function Aging() {
     []
   );
 
-  console.log(aging?.data);
-
   useEffect(() => {
     if (aging?.data && aging.data.length > 0) {
       const processedData = processingAgingData(aging.data);
       setProcessedAgingData(processedData);
     }
   }, [aging]);
-
-  console.log(processedAgingData);
 
   return (
     <DashboardContainer isLoading={isLoadingAging} isError={isErrorAging}>

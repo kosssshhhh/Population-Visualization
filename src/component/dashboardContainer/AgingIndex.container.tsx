@@ -56,16 +56,12 @@ export default function AgingIndex() {
     ProcessedCell[]
   >([]);
 
-  console.log(agingIndex?.data);
-
   useEffect(() => {
     if (agingIndex?.data && agingIndex.data.length > 0) {
       const processedData = processingAgingData(agingIndex.data);
       setProcessedAgingIndexData(processedData);
     }
   }, [agingIndex]);
-
-  console.log(processedAgingIndexData);
 
   return (
     <DashboardContainer isLoading={isLoadingAging} isError={isErrorAging}>
