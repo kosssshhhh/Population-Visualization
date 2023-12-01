@@ -194,7 +194,6 @@ function Population() {
           </button>
         ))}
       </div>
-      <p style={{ color: "white" }}>Year: {selectedYear}</p>
     </div>
   );
 }
