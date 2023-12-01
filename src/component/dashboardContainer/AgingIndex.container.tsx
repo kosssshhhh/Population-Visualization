@@ -29,71 +29,68 @@ const options = {
   responsive: true,
   plugins: {
     legend: {
-      position: 'top' as const,
+      position: 'right' as const,
     },
     title: {
       display: true,
-      text: '고령화 사회, 고령 사회, 초고령 사회',
-    },
-    animation: {
-      duration: 2000,
+      text: '고령화 지수',
     },
   },
 };
 
-// const labels = processedAgingData.map((data) => data.year);
+// const labels = processedAgingIndexData.map((data) => data.year);
 
 type ProcessedCell = {
   year: number;
-  aging: number | null;
+  agingIndex: number | null;
 };
 
-export default function Aging() {
+export default function AgingIndex() {
   const {
     isLoading: isLoadingAging,
     isError: isErrorAging,
-    csvData: aging,
-  } = useFetchCSVData(apis.aging);
+    csvData: agingIndex,
+  } = useFetchCSVData(apis.agingIndex);
 
-  const [processedAgingData, setProcessedAgingData] = useState<ProcessedCell[]>(
-    []
-  );
+  const [processedAgingIndexData, setProcessedAgingIndexData] = useState<
+    ProcessedCell[]
+  >([]);
 
-  console.log(aging?.data);
+  console.log(agingIndex?.data);
 
   useEffect(() => {
-    if (aging?.data && aging.data.length > 0) {
-      const processedData = processingAgingData(aging.data);
-      setProcessedAgingData(processedData);
+    if (agingIndex?.data && agingIndex.data.length > 0) {
+      const processedData = processingAgingData(agingIndex.data);
+      setProcessedAgingIndexData(processedData);
     }
-  }, [aging]);
+  }, [agingIndex]);
 
-  console.log(processedAgingData);
+  console.log(processedAgingIndexData);
 
   return (
     <DashboardContainer isLoading={isLoadingAging} isError={isErrorAging}>
-      {processedAgingData.length > 0 && (
-        <p>고령화 데이터 수신 완료 {processedAgingData.length}</p>
+      {processedAgingIndexData.length > 0 && (
+        <p>고령화지수 데이터 수신 완료 {processedAgingIndexData.length}</p>
       )}
-      {processedAgingData.length === 0 && `데이터가 존재하지 않습니다.`}
+      {processedAgingIndexData.length === 0 && `데이터가 존재하지 않습니다.`}
 
       <Line
         options={options}
         data={{
-          labels: processedAgingData.map((data) => data.year),
+          labels: processedAgingIndexData.map((data) => data.year),
           datasets: [
             {
-              label: '고령 인구 비율',
-              data: processedAgingData.map((data) => data.aging),
-              borderColor: '#D4D4D4',
-              backgroundColor: processedAgingData.map((data) =>
-                data.aging !== null
-                  ? data.aging >= 14
+              label: '고령화 지수',
+              data: processedAgingIndexData.map((data) => data.agingIndex),
+              borderColor: '#EF9034',
+              backgroundColor: processedAgingIndexData.map((data) =>
+                data.agingIndex !== null
+                  ? data.agingIndex >= 14
                     ? 'rgba(255,0,0,1)'
                     : '#D4D4D4'
                   : '#EF9034'
               ),
-              pointRadius: 10,
+              pointRadius: 5,
               fill: false,
             },
           ],
@@ -111,12 +108,12 @@ function processingAgingData<T>(arr: CSVRow[]) {
       if (row === 0) {
         results[col - 1] = {
           year: parseInt(`${arr[row][col]}`),
-          aging: null,
+          agingIndex: null,
         };
       } else {
         results[col - 1] = {
           ...results[col - 1],
-          aging: parseFloat(`${arr[row][col]}`),
+          agingIndex: parseFloat(`${arr[row][col]}`),
         };
       }
     }

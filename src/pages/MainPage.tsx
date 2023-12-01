@@ -10,19 +10,19 @@ import HeaderComponent from '../component/common/header/Header.component';
 import Aging from '../component/dashboardContainer/Aging.container';
 import { pageStyle } from '../@constants/style/style';
 import NewsHeadline from '../component/common/comments/NewsHeadline';
+import AgingIndex from '../component/dashboardContainer/AgingIndex.container';
 
 const MainPage = () => {
   return (
     <main
       className={styles['main-container']}
-      style={{ height: pageStyle.height }}
-    >
+      style={{ height: pageStyle.height }}>
       <div className={styles['progress-container']}>
         <ScrollProgress />
       </div>
       <div className={styles['dashboard-container']}>
         <HeaderComponent />
-        <NewsHeadline/>
+        <NewsHeadline />
         <Population />
         <Married />
         <InflationProvider>
@@ -30,6 +30,7 @@ const MainPage = () => {
         </InflationProvider>
         <Aging />
         <Cartogram />
+        <AgingIndex />
       </div>
     </main>
   );
