@@ -8,6 +8,7 @@ const apis = {
   priceIndex: '/csv/priceIndex.csv', // 물가지수
   wage: '/csv/wage.csv',
   apartPrice: '/csv/apartPrice.csv',
+  aging: '/csv/aging.csv',
 };
 
 export default apis;

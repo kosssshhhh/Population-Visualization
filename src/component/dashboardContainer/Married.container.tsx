@@ -39,6 +39,7 @@ export default function Married() {
 
   const options = {
     ...chartOption,
+    grid: { top: 8, right: 8, bottom: 24, left: 60 },
     xAxis: {
       type: 'category',
       data: divorceData.map((item) => item.year),

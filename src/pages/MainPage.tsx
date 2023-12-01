@@ -7,6 +7,7 @@ import Population from '../component/dashboardContainer/Population.container';
 
 import styles from './MainPage.module.css';
 import HeaderComponent from '../component/common/header/Header.component';
+import Aging from '../component/dashboardContainer/Aging.container';
 
 const MainPage = () => {
   return (
@@ -21,6 +22,7 @@ const MainPage = () => {
         <InflationProvider>
           <Inflation />
         </InflationProvider>
+        <Aging />
         <Cartogram />
       </div>
     </main>
