@@ -27,10 +27,6 @@ function Population() {
     .scaleLinear()
     .domain([0, d3.max(data, (d) => d.people)])
     .rangeRound([defaultHeight - margin.bottom, margin.top]);
-  // const color = d3
-  //   .scaleSequential()
-  //   .domain([0, 90])
-  //   .interpolator(d3.interpolateBlues);
 
   useEffect(() => {
     const svg = d3
@@ -38,16 +34,20 @@ function Population() {
       .attr("viewBox", [0, 0, width, defaultHeight]);
 
     const xAxis = (g) =>
-      g.attr("transform", `translate(0,${defaultHeight - margin.bottom})`).call(
-        d3
-          .axisBottom(x)
-          .ticks(width / 80)
-          .tickSizeOuter(0)
-      );
+      g
+        .attr("transform", `translate(0,${defaultHeight - margin.bottom})`)
+        .call(
+          d3
+            .axisBottom(x)
+            .ticks(width / 80)
+            .tickSizeOuter(0)
+        )
+        .attr("color", "white");
     const yAxis = (g) =>
       g
         .attr("transform", `translate(${width - margin.right},0)`)
-        .call(d3.axisRight(y).ticks(null, "s"));
+        .call(d3.axisRight(y).ticks(null, "s"))
+        .attr("color", "white");
 
     svg.append("g").call(xAxis);
     svg.append("g").call(yAxis);
@@ -70,7 +70,6 @@ function Population() {
     rect = rect
       .enter()
       .append("rect")
-      .style("mix-blend-mode", "darken")
       .attr("x", (d) => x(d.age) + dx)
       .attr("y", (d) => y(0))
       .attr("width", x.bandwidth() - 1)
@@ -98,25 +97,6 @@ function Population() {
       data.filter((d) => d.year == selectedYear && d.age === 65),
       (d) => `:${d.year - d.age}`
     );
-
-    text.exit().remove();
-
-    text = text
-      .enter()
-      .append("text")
-      .attr("x", (d) => x(d.age) + dx)
-      .attr("y", (d) => y(d.people))
-      .attr("dy", "-1em") // 위쪽으로 약간 이동하여 막대 위에 표시
-      .attr("text-anchor", "right") // 텍스트를 중앙 정렬
-      .attr("font-size", "15px") // 텍스트 크기 설정
-      .attr("font-family", "Bev")
-      .text((d) => d.people) // 사람 수 표시
-      .merge(text);
-
-    text
-      .transition(t)
-      .attr("x", (d) => x(d.age) + dx)
-      .attr("y", (d) => y(d.people));
   }, [data, selectedYear]);
 
   const years = Array.from(new Set(data.map((d) => +d.year)));
@@ -141,7 +121,7 @@ function Population() {
   }, [animate, years]);
 
   return (
-    <div>
+    <div style={{ backgroundColor: "black", color: "white" }}>
       <svg ref={svgRef} />
       <div>
         <div
@@ -149,6 +129,8 @@ function Population() {
           style={{
             position: "absolute",
             visibility: "hidden",
+            backgroundColor: "#FFFFFF", // 툴팁 배경을 하얀색으로 변경
+            color: "black", // 툴팁 글자색을 검은색으로 변경
             backgroundColor: "white",
             padding: "10px",
             borderRadius: "5px",
@@ -159,26 +141,60 @@ function Population() {
         <button
           onClick={() => setAnimate(!animate)}
           style={{
-            backgroundColor: animate ? "blue" : "white",
-            color: animate ? "white" : "black",
+            backgroundColor: animate ? "#F0F0F0" : "transparent",
+            color: animate ? "black" : "#FFFFFF",
+            padding: "10px 20px",
+            margin: "0px 5px",
+            fontSize: "16px",
+            border: "none",
+            cursor: "pointer",
+            transition: "all 0.3s ease",
+          }}
+          onMouseOver={(event) => {
+            event.target.style.backgroundColor = "#F0F0F0";
+            event.target.style.color = "black";
+          }}
+          onMouseOut={(event) => {
+            if (!animate) {
+              event.target.style.backgroundColor = "transparent";
+              event.target.style.color = "#FFFFFF";
+            }
           }}
         >
           Animate
         </button>
+
         {years.map((year, index) => (
           <button
             key={index}
             onClick={() => setSelectedYear(year)}
             style={{
-              backgroundColor: selectedYear === year ? "blue" : "white",
-              color: selectedYear === year ? "white" : "black",
+              backgroundColor:
+                selectedYear === year ? "#F0F0F0" : "transparent",
+              color: selectedYear === year ? "black" : "#FFFFFF",
+              padding: "10px 20px",
+              margin: "0px 5px",
+              fontSize: "16px",
+              border: "none",
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+            }}
+            onMouseOver={(event) => {
+              event.target.style.backgroundColor = "#F0F0F0";
+              event.target.style.color = "black";
+            }}
+            onMouseOut={(event) => {
+              if (selectedYear !== year) {
+                event.target.style.backgroundColor = "transparent";
+                event.target.style.color = "#FFFFFF";
+              }
             }}
           >
             {year}
           </button>
         ))}
       </div>
-      <p>Year: {selectedYear}</p>
+      <p style={{ color: "white" }}>Year: {selectedYear}</p>
     </div>
   );
 }
