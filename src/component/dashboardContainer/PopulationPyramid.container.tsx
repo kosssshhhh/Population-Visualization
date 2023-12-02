@@ -3,6 +3,8 @@ import useFetchCSVData, { CSVRow } from '../../hooks/useFetchCSVData';
 import DashboardContainer from './DashboardContainer.container';
 import { Bar } from 'react-chartjs-2';
 
+import styled from 'styled-components';
+
 import apis from '../../@constants/apis/api';
 
 import {
@@ -23,95 +25,37 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend
-  //   annotationPlugin
 );
 
-const options = {
-  responsive: true,
-  maintainAspectRatio: true,
-  aspectRatio: 1.7,
-  animation: {
-    duration: 0,
-  },
-  layout: {
-    // padding: 20,
-  },
-  indexAxis: 'y' as const,
-  plugins: {
-    legend: {
-      display: true,
-      position: 'bottom' as const,
-      align: 'start' as const,
-      onClick: () => {},
-      labels: {
-        usePointStyle: true,
-        boxWidth: 6, //point 크기 작게 지정
-        padding: 20,
-        font: {
-          size: 12,
-        },
-      },
-    },
-  },
-  tooltip: {
-    callbacks: {
-      label: function (context: any) {
-        var label = context.dataset.label || '';
+const RangeInput = styled.input`
+  -webkit-appearance: none;
+  width: 100%;
+  height: 10px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: 0.2s;
+  transition: opacity 0.2s;
 
-        if (label) {
-          label += ': ';
-        }
-        if (context.parsed.x < 0) {
-          label += `${-context.parsed.x}`;
-        } else {
-          label += context.parsed.x;
-        }
-        return label;
-      },
-    },
-  },
+  ::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    background: #6787e6;
+    cursor: pointer;
+    border-radius: 50%;
+  }
 
-  scales: {
-    xAxes: {
-      suggestedMin: 0,
-      suggestedMax: 30,
-      ticks: {
-        autoSkip: true,
-        maxRotation: 0,
-        minRotation: 0,
-        labelOffset: 0,
-        padding: 0,
-        font: {
-          size: 12,
-        },
-        callback: function (i: any) {
-          return i < 0 ? `${-i}` : `${i}`;
-        },
-      },
-      grid: {
-        display: false, //뒷배경 라인 없애기
-      },
-    },
-    x: {
-      display: false, //하단 라인을 없애기
-      ticks: {
-        display: false, //새로운tick을 만들었으니 기존의 tick을 제거
-      },
-    },
-    y: {
-      ticks: {
-        font: {
-          size: 12,
-        },
-        beginAtZero: true,
-      },
-      grid: {
-        display: false, //뒷배경 라인 없애기
-      },
-      position: 'left' as const,
-    },
-  },
-};
+  ::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    background: #6787e6;
+    cursor: pointer;
+    border-radius: 50%;
+  }
+`;
 
 type populationType = {
   ageGroup: string;
@@ -125,7 +69,8 @@ type ProcessedCell = {
 };
 
 export default function PopulationPyramid() {
-  const [selectedYear, setSelectedYear] = useState(0);
+  const [selectedYear, setSelectedYear] = useState(1970);
+  const [selectData, setSelectData] = useState<ProcessedCell | null>(null);
   const {
     isLoading: isLoadingAging,
     isError: isErrorAging,
@@ -148,44 +93,139 @@ export default function PopulationPyramid() {
     }
   }, [population]);
 
-  const selectData = processedPopulationData[0];
+  useEffect(() => {
+    const dataForSelectedYear = processedPopulationData.find(
+      (data) => data.year === selectedYear
+    );
+    setSelectData(dataForSelectedYear || null);
+  }, [selectedYear, processedPopulationData]);
 
   if (!selectData) return null;
 
-  console.log(selectData.population);
-
-  const dataset = {
-    labels: selectData.population.map((data) => data.ageGroup).reverse(),
-    datasets: [
-      {
-        label: '남성',
-        stack: 'Stack 0',
-        backgroundColor: '#6787E6',
-        hoverBackgroundColor: '#3D37E6',
-        data: selectData.population
-          .map((data) => data.male)
-          .reverse()
-          .map((k: number) => -k),
-      },
-      {
-        label: '여성',
-        stack: 'Stack 0',
-        backgroundColor: '#E6B410',
-        hoverBackgroundColor: '#E63741',
-        data: selectData.population.map((data) => data.female).reverse(),
-      },
-    ],
-  };
-
   return (
     <DashboardContainer isLoading={isLoadingAging} isError={isErrorAging}>
-      {processedPopulationData.length > 0 && (
-        <p>고령화 데이터 수신 완료 {processedPopulationData.length}</p>
-      )}
-      {processedPopulationData.length === 0 && `데이터가 존재하지 않습니다.`}
+      <Bar
+        options={{
+          responsive: true,
+          maintainAspectRatio: true,
+          aspectRatio: 1.7,
+          animation: {
+            duration: 0,
+          },
+          layout: {
+            // padding: 20,
+          },
+          indexAxis: 'y' as const,
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: function (context: any) {
+                  let label = context.dataset.label || '';
 
-      <Bar options={options} data={dataset} data-testid={'chart-age-pyramid'} />
-      <input
+                  if (label) {
+                    label += ': ';
+                  }
+                  if (context.parsed.x < 0) {
+                    label += `${-context.parsed.x}명`;
+                  } else {
+                    label += `${context.parsed.x}명`;
+                  }
+                  return label;
+                },
+              },
+            },
+            title: {
+              display: true,
+              text: `${selectedYear}년 인구 피라미드`,
+              font: {
+                size: 20,
+              },
+            },
+            legend: {
+              display: true,
+              position: 'bottom' as const,
+              align: 'start' as const,
+              onClick: () => {},
+              labels: {
+                usePointStyle: true,
+                boxWidth: 6,
+                padding: 20,
+                font: {
+                  size: 12,
+                },
+              },
+            },
+          },
+
+          scales: {
+            xAxes: {
+              suggestedMin: 0,
+              suggestedMax: 30,
+              ticks: {
+                autoSkip: true,
+                maxRotation: 0,
+                minRotation: 0,
+                labelOffset: 0,
+                padding: 0,
+                font: {
+                  size: 12,
+                },
+                callback: function (i: any) {
+                  return i < 0 ? `${-i}` : `${i}`;
+                },
+              },
+              grid: {
+                display: false, //뒷배경 라인 없애기
+              },
+            },
+            x: {
+              display: false, //하단 라인을 없애기
+              ticks: {
+                display: false, //새로운tick을 만들었으니 기존의 tick을 제거
+                font: {
+                  size: 12,
+                },
+              },
+            },
+            y: {
+              ticks: {
+                font: {
+                  size: 12,
+                },
+              },
+              grid: {
+                display: false, //뒷배경 라인 없애기
+              },
+              position: 'left' as const,
+            },
+          },
+        }}
+        data={{
+          labels: selectData?.population.map((data) => data.ageGroup).reverse(),
+          datasets: [
+            {
+              label: '남성',
+              stack: 'Stack 0',
+              backgroundColor: '#6787E6',
+              hoverBackgroundColor: '#3D37E6',
+              data: selectData?.population
+                .map((data) => data.male)
+                .reverse()
+                .map((k: number) => -k),
+            },
+            {
+              label: '여성',
+              stack: 'Stack 0',
+              backgroundColor: '#E6B410',
+              hoverBackgroundColor: '#E63741',
+              data: selectData?.population.map((data) => data.female).reverse(),
+            },
+          ],
+        }}
+        data-testid={'chart-age-pyramid'}
+      />
+
+      <RangeInput
         type='range'
         min={processedPopulationData[0]?.year}
         max={
@@ -199,6 +239,7 @@ export default function PopulationPyramid() {
   );
 }
 
+// 데이터 이용하기 좋은 형태로 전처리 함수
 function processingPopulationData<T>(arr: CSVRow[]): ProcessedCell[] {
   const results: ProcessedCell[] = [];
   let currentYear = 0;
