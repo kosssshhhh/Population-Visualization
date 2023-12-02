@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import LoadingSpinner from '../common/loading/LoadingSpinner.component';
 import useObserver from '../../hooks/useObserver';
 import { opacityVariants } from '../../@constants/animation/animation';
+import styles from './DashboardContainer.module.css';
 
 type Props = {
   isLoading: boolean;
@@ -15,7 +16,7 @@ const DashboardContainer = ({ isLoading, children, isError }: Props) => {
   if (isLoading) return <LoadingSpinner isLoading={isLoading} />; // skeleton UI
   if (isError) return <>Error Page</>;
 
-  return <div>{children}</div>;
+  return <div className={styles.container}>{children}</div>;
 };
 
 export default DashboardContainer;

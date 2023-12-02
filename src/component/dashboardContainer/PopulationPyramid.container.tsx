@@ -17,6 +17,9 @@ import {
   Legend,
 } from 'chart.js';
 import { type } from 'os';
+import { options } from './@constants/reactChartJsOption';
+import { ProcessPyramidCell } from './@types/cell';
+import { processingPopulationData } from './@utils/preprocessingData';
 
 ChartJS.register(
   CategoryScale,
@@ -57,20 +60,9 @@ const RangeInput = styled.input`
   }
 `;
 
-type populationType = {
-  ageGroup: string;
-  male: number;
-  female: number;
-};
-
-type ProcessedCell = {
-  year: number;
-  population: populationType[];
-};
-
 export default function PopulationPyramid() {
   const [selectedYear, setSelectedYear] = useState(1970);
-  const [selectData, setSelectData] = useState<ProcessedCell | null>(null);
+  const [selectData, setSelectData] = useState<ProcessPyramidCell | null>(null);
   const {
     isLoading: isLoadingAging,
     isError: isErrorAging,
@@ -78,7 +70,7 @@ export default function PopulationPyramid() {
   } = useFetchCSVData(apis.population_pyramid);
 
   const [processedPopulationData, setProcessedPopulationData] = useState<
-    ProcessedCell[]
+    ProcessPyramidCell[]
   >([]);
 
   const handleYearChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,103 +92,21 @@ export default function PopulationPyramid() {
     setSelectData(dataForSelectedYear || null);
   }, [selectedYear, processedPopulationData]);
 
-  if (!selectData) return null;
+  if (!selectData) return <></>;
 
   return (
     <DashboardContainer isLoading={isLoadingAging} isError={isErrorAging}>
       <Bar
         options={{
-          responsive: true,
-          maintainAspectRatio: true,
-          aspectRatio: 1.7,
-          animation: {
-            duration: 0,
-          },
-          layout: {
-            // padding: 20,
-          },
-          indexAxis: 'y' as const,
+          ...options,
           plugins: {
-            tooltip: {
-              callbacks: {
-                label: function (context: any) {
-                  let label = context.dataset.label || '';
-
-                  if (label) {
-                    label += ': ';
-                  }
-                  if (context.parsed.x < 0) {
-                    label += `${-context.parsed.x}명`;
-                  } else {
-                    label += `${context.parsed.x}명`;
-                  }
-                  return label;
-                },
-              },
-            },
+            ...options.plugins,
             title: {
               display: true,
               text: `${selectedYear}년 인구 피라미드`,
               font: {
                 size: 20,
               },
-            },
-            legend: {
-              display: true,
-              position: 'bottom' as const,
-              align: 'start' as const,
-              onClick: () => {},
-              labels: {
-                usePointStyle: true,
-                boxWidth: 6,
-                padding: 20,
-                font: {
-                  size: 12,
-                },
-              },
-            },
-          },
-
-          scales: {
-            xAxes: {
-              suggestedMin: 0,
-              suggestedMax: 30,
-              ticks: {
-                autoSkip: true,
-                maxRotation: 0,
-                minRotation: 0,
-                labelOffset: 0,
-                padding: 0,
-                font: {
-                  size: 12,
-                },
-                callback: function (i: any) {
-                  return i < 0 ? `${-i}` : `${i}`;
-                },
-              },
-              grid: {
-                display: false, //뒷배경 라인 없애기
-              },
-            },
-            x: {
-              display: false, //하단 라인을 없애기
-              ticks: {
-                display: false, //새로운tick을 만들었으니 기존의 tick을 제거
-                font: {
-                  size: 12,
-                },
-              },
-            },
-            y: {
-              ticks: {
-                font: {
-                  size: 12,
-                },
-              },
-              grid: {
-                display: false, //뒷배경 라인 없애기
-              },
-              position: 'left' as const,
             },
           },
         }}
@@ -237,35 +147,4 @@ export default function PopulationPyramid() {
       />
     </DashboardContainer>
   );
-}
-
-// 데이터 이용하기 좋은 형태로 전처리 함수
-function processingPopulationData<T>(arr: CSVRow[]): ProcessedCell[] {
-  const results: ProcessedCell[] = [];
-  let currentYear = 0;
-  for (let row = 1; row < arr.length; row += 2) {
-    if (arr[row][0] !== '') {
-      currentYear = parseInt(`${arr[row][0]}`);
-      results.push({
-        year: currentYear,
-        population: [],
-      });
-    }
-    for (let col = 1; col < arr[0].length; col++) {
-      if (arr[row][col] === '') continue;
-      const ageGroup = `${arr[0][col]}`;
-      const malePopulation = parseInt(`${arr[row][col]}`.replace(/,/g, ''));
-      const femalePopulation = parseInt(
-        `${arr[row + 1][col]}`.replace(/,/g, '')
-      );
-
-      if (ageGroup === '') continue;
-      results[results.length - 1].population.push({
-        ageGroup,
-        male: malePopulation,
-        female: femalePopulation,
-      });
-    }
-  }
-  return results;
 }

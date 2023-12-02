@@ -36,7 +36,6 @@ const MainPage = () => {
         <Aging />
         <Cartogram />
         <AgingIndex />
-        <PopulationPyramid />
       </div>
     </main>
   );

@@ -3,6 +3,7 @@ import type {
   ProcessApartPriceCell,
   ProcessDefaultCell,
   ProcessIncreaseCell,
+  ProcessPyramidCell,
 } from '../@types/cell';
 import type { LineData } from '../@types/data';
 
@@ -269,4 +270,37 @@ export function processApartPriceData(arr: CSVRow[]) {
   //     ...item,
   //     increase: (item.value - srcValue) / srcValue,
   //   }));
+}
+
+// 데이터 이용하기 좋은 형태로 전처리 함수
+export function processingPopulationData<T>(
+  arr: CSVRow[]
+): ProcessPyramidCell[] {
+  const results: ProcessPyramidCell[] = [];
+  let currentYear = 0;
+  for (let row = 1; row < arr.length; row += 2) {
+    if (arr[row][0] !== '') {
+      currentYear = parseInt(`${arr[row][0]}`);
+      results.push({
+        year: currentYear,
+        population: [],
+      });
+    }
+    for (let col = 1; col < arr[0].length; col++) {
+      if (arr[row][col] === '') continue;
+      const ageGroup = `${arr[0][col]}`;
+      const malePopulation = parseInt(`${arr[row][col]}`.replace(/,/g, ''));
+      const femalePopulation = parseInt(
+        `${arr[row + 1][col]}`.replace(/,/g, '')
+      );
+
+      if (ageGroup === '') continue;
+      results[results.length - 1].population.push({
+        ageGroup,
+        male: malePopulation,
+        female: femalePopulation,
+      });
+    }
+  }
+  return results;
 }

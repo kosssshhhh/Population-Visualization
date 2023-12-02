@@ -4,29 +4,22 @@ import { motion } from 'framer-motion';
 import Keyword from './Keyword';
 import useObserver from '../../../hooks/useObserver';
 import { keywords } from '../../../@constants/news/keywords';
-import { opacityVariants, opacityVariants2 } from '../../../@constants/animation/animation';
+import { opacityVariants } from '../../../@constants/animation/animation';
 import styles from './Keywords.module.css';
 
 export default function Keywords() {
-  const { ref: ref1, animation: animation1 } = useObserver();
-  const { ref: ref2, animation: animation2 } = useObserver();
+  const { ref, animation } = useObserver();
   return (
     <>
-      <motion.div
-        ref={ref1}
-        initial='hidden'
-        animate={animation1}
-        variants={opacityVariants2}
-        className={styles.container}
-      >
+      <div className={styles.container}>
         {keywords.map((item) => (
           <Keyword key={item} keyword={item} />
         ))}
-      </motion.div>
+      </div>
       <motion.div
-        ref={ref2}
+        ref={ref}
         initial='hidden'
-        animate={animation2}
+        animate={animation}
         variants={opacityVariants}
         className={styles.container}
       >

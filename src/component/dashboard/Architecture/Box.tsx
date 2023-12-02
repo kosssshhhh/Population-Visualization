@@ -12,8 +12,8 @@ export default function Box({ portion, sequence }: Props) {
 
   let keyframes = [{ height: '0%' }, { height: `${portion}%` }];
   let options = {
-    delay: sequence * 200,
-    duration: portion * 2,
+    delay: sequence * 100,
+    duration: portion * 1,
     fill: 'forwards' as FillMode,
   };
 

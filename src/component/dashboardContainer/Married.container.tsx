@@ -16,7 +16,7 @@ export default function Married() {
   useEffect(() => {
     setKey((prev) => prev + 1);
   }, [inView]);
-  
+
   const {
     isLoading: isLoadingMarried,
     isError: isErrorMarried,
@@ -32,8 +32,8 @@ export default function Married() {
   if (!divorce?.data) return <></>;
   if (!married?.data) return <></>;
 
-  const divorceData = processingPopulationData(divorce.data);
-  const marryData = processingPopulationData(married.data);
+  const divorceData = processingPopulationCountData(divorce.data);
+  const marryData = processingPopulationCountData(married.data);
 
   const options = {
     ...chartOption,
@@ -78,7 +78,7 @@ export default function Married() {
   );
 }
 
-function processingPopulationData<T>(arr: CSVRow[]) {
+function processingPopulationCountData<T>(arr: CSVRow[]) {
   const results: ProcessMarriedCell[] = [];
   for (let row = 0; row < arr.length - 1; row++) {
     for (let col = 0; col < arr[row].length; col++) {
@@ -100,3 +100,24 @@ function processingPopulationData<T>(arr: CSVRow[]) {
   }
   return results.filter((item) => item.year >= 2011);
 }
+
+// function processingPopulationData(arr: CSVRow[]) {
+//   const results: ProcessedCell[] = [];
+//   for (let row = 0; row < arr.length; row++) {
+//     for (let col = 0; col < arr[row].length; col++) {
+//       if (row === 0 && col === 0) continue;
+//       if (row === 0) {
+//         results[col - 1] = {
+//           year: parseInt(arr[row][col] as string),
+//           total: null,
+//         };
+//       } else {
+//         results[col - 1] = {
+//           ...results[col - 1],
+//           [row === 1 ? 'total' : arr[row][0]]: parseInt(`${arr[row][col]}`),
+//         };
+//       }
+//     }
+//   }
+//   return results;
+// }

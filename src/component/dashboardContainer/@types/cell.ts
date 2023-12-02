@@ -14,6 +14,16 @@ export type ProcessApartPriceCell = {
   xl: ProcessDefaultCell[];
 };
 
+type populationType = {
+  ageGroup: string;
+  male: number;
+  female: number;
+};
+
+export type ProcessPyramidCell = {
+  year: number;
+  population: populationType[];
+};
 // export type ProcessEduCell = ProcessIncreaseCell & {
 //   price: number | null;
 // };
