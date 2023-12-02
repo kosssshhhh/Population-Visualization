@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { useInflationContext } from '../../context/InflationContext';
 import { ProcessApartPriceCell, ProcessIncreaseCell } from './@types/cell';
 import ReactECharts from 'echarts-for-react';
@@ -6,6 +6,11 @@ import { seriesOption, chartOption } from './@constants/echartOptions';
 import useFetchCSVData from '../../hooks/useFetchCSVData';
 import apis from '../../@constants/apis/api';
 import { processApartPriceData } from './@utils/preprocessingData';
+
+type Props = {
+  eduPriceData: ProcessIncreaseCell[];
+  wageData: ProcessIncreaseCell[];
+};
 
 const apartSize = [
   '초소형(40㎡ 이하)',
@@ -18,11 +23,36 @@ const apartSize = [
 const defaultX = Array(12)
   .fill('')
   .map((_, idx) => idx + 2011);
-function Detail() {
-  const { selectedItem, selectedData } = useInflationContext();
-  const { csvData: apartPrice } = useFetchCSVData(apis.apartPrice);
 
-  useEffect(() => {}, [selectedItem]);
+type SelectOptions = '' | 'eduPrice' | 'wage' | 'housePrice';
+function Detail({ eduPriceData, wageData }: Props) {
+  const { selectedItem } = useInflationContext();
+  const { csvData: apartPrice } = useFetchCSVData(apis.apartPrice);
+  const [selected, setSelected] = useState<SelectOptions>('');
+
+  const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => {
+    setSelected(e.target.value as SelectOptions);
+  };
+
+  const [selectedData, setSelectedData] = useState<ProcessIncreaseCell[]>([]);
+  useEffect(() => {
+    if (selected === 'eduPrice') setSelectedData(eduPriceData);
+    // else if (selected === 'housePrice') selectedData = apartPriceSeries;
+    else if (selected === 'wage') setSelectedData(wageData);
+    else setSelectedData([]);
+  }, [selected]);
+
+  useEffect(() => {
+    if (selectedItem === '사교육비') {
+      setSelected('eduPrice');
+      setSelectedData(eduPriceData);
+    } else if (selectedItem === '월평균임금') {
+      setSelected('wage');
+      setSelectedData(wageData);
+    } else if (selectedItem === '주택가격지수') {
+      setSelected('housePrice');
+    }
+  }, [selectedItem]);
 
   if (!apartPrice?.data) return <></>;
 
@@ -37,8 +67,6 @@ function Detail() {
       ...seriesOption,
       // type: 'bar'
     }));
-
-  console.log(selectedItem);
 
   const options = {
     ...chartOption,
@@ -56,12 +84,11 @@ function Detail() {
       // scale: false,
     },
     series:
-      selectedItem !== '주택가격지수'
+      selected !== 'housePrice'
         ? [
             {
-              name: selectedItem === '월평균임금' ? '평균연봉' : selectedItem,
-              datasetId:
-                selectedItem === '월평균임금' ? '평균연봉' : selectedItem,
+              name: selected === 'wage' ? '평균연봉' : '사교육비',
+              datasetId: selected === 'wage' ? '평균연봉' : '사교육비',
               data: selectedData.map((item) => item.value),
               ...seriesOption,
             },
@@ -71,18 +98,23 @@ function Detail() {
 
   return (
     <div>
-      <p>{selectedItem}</p>
+      <select onChange={handleSelect} value={selected}>
+        <option />
+        <option value='eduPrice'>사교육비</option>
+        <option value='wage'>월평균임금</option>
+        <option value='housePrice'>주택가격</option>
+      </select>
       {
         <ReactECharts
           // onChartReady={onChartReadyCallback}
           option={options}
           // onEvents={onEvents}
-          key={selectedItem}
+          key={selected + Math.random()}
         />
       }
     </div>
   );
 }
 
-export default Detail;
-// export default React.memo(Detail);
+// export default Detail;
+export default React.memo(Detail);

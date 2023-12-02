@@ -1,14 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import useFetchCSVData, { CSVRow } from '../../hooks/useFetchCSVData';
 import apis from '../../@constants/apis/api';
 import DashboardContainer from './DashboardContainer.container';
 import { LineData, LineForm } from './@types/data';
-import LineDashboard from '../dashboard/LineDashboard';
 import { ProcessMarriedCell } from './@types/cell';
 import ReactECharts from 'echarts-for-react';
 import { chartOption, seriesOption } from './@constants/echartOptions';
+import useObserver from '../../hooks/useObserver';
+import { opacityVariants } from '../../@constants/animation/animation';
+import { motion } from 'framer-motion';
 
 export default function Married() {
+  const { ref, animation, inView } = useObserver();
+  const [key, setKey] = useState(1);
+  useEffect(() => {
+    setKey((prev) => prev + 1);
+  }, [inView]);
+  
   const {
     isLoading: isLoadingMarried,
     isError: isErrorMarried,
@@ -23,7 +31,6 @@ export default function Married() {
 
   if (!divorce?.data) return <></>;
   if (!married?.data) return <></>;
-  let data: LineForm = [];
 
   const divorceData = processingPopulationData(divorce.data);
   const marryData = processingPopulationData(married.data);
@@ -59,8 +66,14 @@ export default function Married() {
       isLoading={isLoadingMarried && isLoadingDivorce}
       isError={isErrorMarried && isErrorDivorce}
     >
-      {/* {data.length > 0 && <LineDashboard data={data} />} */}
-      <ReactECharts option={options} />
+      <motion.div
+        ref={ref}
+        initial='hidden'
+        animate={animation}
+        variants={opacityVariants}
+      >
+        <ReactECharts option={options} key={key} />
+      </motion.div>
     </DashboardContainer>
   );
 }
@@ -86,24 +99,4 @@ function processingPopulationData<T>(arr: CSVRow[]) {
     }
   }
   return results.filter((item) => item.year >= 2011);
-}
-
-function formattingForNivoData(
-  id: string,
-  arr: ProcessMarriedCell[]
-): LineData {
-  const result = {
-    id,
-    color: 'hsl(201, 70%, 50%)',
-    xLegend: 'year',
-    yLegend: 'count',
-  } as LineData;
-  result.data = arr
-    .filter((item) => item.year >= 2011)
-    .map((item) => ({
-      x: item.year,
-      y: item.count!,
-    }));
-
-  return result;
 }

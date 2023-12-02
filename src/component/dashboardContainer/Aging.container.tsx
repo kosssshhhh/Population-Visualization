@@ -81,6 +81,7 @@ export default function Aging() {
 
   return (
     <DashboardContainer isLoading={isLoadingAging} isError={isErrorAging}>
+<<<<<<< HEAD
       {processedAgingData.length > 0 && (
         <p>고령화 데이터 수신 완료 {processedAgingData.length}</p>
       )}
@@ -108,6 +109,47 @@ export default function Aging() {
           ],
         }}
       />
+=======
+      <>
+        <Line
+          data={{
+            labels: processedAgingData.map((data) => data.year),
+            datasets: [
+              // 고령 인구 데이터셋
+              {
+                label: '고령 인구',
+                data: processedAgingData.map((data) => data.oldPopulation),
+                borderColor: 'rgba(255,99,132,1)',
+                fill: false,
+              },
+            ],
+          }}
+          options={options}
+        />
+
+        <Line
+          data={{
+            labels: processedAgingData.map((data) => data.year),
+            datasets: [
+              {
+                label: '고령화 지수',
+                data: processedAgingData.map((data) => data.aging),
+                borderColor: '#D4D4D4',
+                backgroundColor: processedAgingData.map((data) =>
+                  data.aging !== null
+                    ? data.aging >= 14
+                      ? 'rgba(255,0,0,1)'
+                      : '#D4D4D4'
+                    : '#EF9034'
+                ),
+                pointRadius: 10,
+                fill: false,
+              },
+            ],
+          }}
+        />
+      </>
+>>>>>>> layout
     </DashboardContainer>
   );
 }

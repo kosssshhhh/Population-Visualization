@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { ChangeEvent, useEffect } from 'react';
 import useFetchCSVData, { CSVRow } from '../../hooks/useFetchCSVData';
 import apis from '../../@constants/apis/api';
 import { slice2DArray } from '../../utils/sliceArray';
@@ -21,6 +21,9 @@ import { ECharts } from 'echarts';
 import Detail from './Detail';
 import { useInflationContext } from '../../context/InflationContext';
 import { seriesOption, chartOption } from './@constants/echartOptions';
+import useObserver from '../../hooks/useObserver';
+import { motion } from 'framer-motion';
+import { opacityVariants } from '../../@constants/animation/animation';
 
 // 사교육비, 물가, 주택 가격
 function Inflation() {
@@ -31,6 +34,12 @@ function Inflation() {
   const onChartReadyCallback = (e: ECharts) => {
     chart.current = e;
   };
+
+  const { ref, animation, inView } = useObserver();
+  const [key, setKey] = useState(1);
+  useEffect(() => {
+    setKey((prev) => prev + 1);
+  }, [inView]);
 
   const {
     isLoading: isLoadingEdu,
@@ -133,17 +142,17 @@ function Inflation() {
     if (params.seriesName === '물가지수') return;
 
     setSelectedItem(params.seriesName);
-    switch (params.seriesName) {
-      case '사교육비':
-        setSelectedData(eduPriceData);
-        break;
-      case '월평균임금':
-        setSelectedData(wageData);
-        break;
-      case '주택가격지수':
-      default:
-        break;
-    }
+    // switch (params.seriesName) {
+    //   case '사교육비':
+    //     setSelectedData(eduPriceData);
+    //     break;
+    //   case '월평균임금':
+    //     setSelectedData(wageData);
+    //     break;
+    //   case '주택가격지수':
+    //   default:
+    //     break;
+    // }
   };
 
   const onEvents = {
@@ -152,14 +161,20 @@ function Inflation() {
 
   return (
     <DashboardContainer isLoading={isLoadingEdu} isError={isErrorEdu}>
-      <section>
+      <motion.div
+        ref={ref}
+        initial='hidden'
+        animate={animation}
+        variants={opacityVariants}
+      >
         <ReactECharts
           onChartReady={onChartReadyCallback}
           option={options}
           onEvents={onEvents}
+          key={key}
         />
-        <Detail />
-      </section>
+        <Detail eduPriceData={eduPriceData} wageData={wageData} />
+      </motion.div>
     </DashboardContainer>
   );
 }

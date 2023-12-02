@@ -1,0 +1,23 @@
+.child {
+  background-color: orange;
+  /* animation: boxsize; */
+  width: 100%;
+}
+
+.parent {
+  height: 3.5vw;
+  /* display: flex; */
+  width: 3.5vw;
+}
+
+.generator {
+  display: flex;
+  flex-wrap: wrap;
+  width: 25%;
+  gap: 0.5vw;
+  height: 100%;
+}
+
+.generator-container {
+  display: flex;
+}
