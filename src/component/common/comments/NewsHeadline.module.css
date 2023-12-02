@@ -7,3 +7,17 @@
   justify-content: space-around;
   align-items: center;
 }
+
+.question {
+  height: 100vh;
+  color: white;
+  font-size: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.paragraph {
+  margin-bottom: 3rem;
+}

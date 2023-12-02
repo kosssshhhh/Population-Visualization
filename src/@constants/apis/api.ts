@@ -9,6 +9,7 @@ const apis = {
   wage: '/csv/wage.csv',
   apartPrice: '/csv/apartPrice.csv',
   aging: '/csv/aging.csv',
+  populationArchitecture: '/csv/population_architecture.csv',
 };
 
 export default apis;

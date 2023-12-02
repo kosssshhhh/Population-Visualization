@@ -1,6 +1,6 @@
-import { useEffect } from "react";
-import { useAnimation } from "framer-motion";
-import { useInView } from "react-intersection-observer";
+import { useEffect } from 'react';
+import { useAnimation } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 
 const useObserver = () => {
   const animation = useAnimation();
@@ -8,13 +8,13 @@ const useObserver = () => {
 
   useEffect(() => {
     if (inView) {
-      animation.start("visible");
+      animation.start('visible');
     } else {
-      animation.start("hidden");
+      animation.start('hidden');
     }
   }, [animation, inView]);
 
-  return { ref, animation };
+  return { ref, animation, inView };
 };
 
 export default useObserver;

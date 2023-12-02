@@ -2,6 +2,11 @@ import useFetchCSVData, { CSVRow } from '../../hooks/useFetchCSVData';
 import apis from '../../@constants/apis/api';
 import DashboardContainer from './DashboardContainer.container';
 import { slice2DArray } from '../../utils/sliceArray';
+import PopulationArchitecture from '../dashboard/Architecture/PopulationArchitecture';
+import useObserver from '../../hooks/useObserver';
+import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import { opacityVariants } from '../../@constants/animation/animation';
 
 type Age = '1' | '2' | '3' | '4' | '5' | '6' | '7';
 type AgeRangeF<T extends Age> = T extends `${infer R}`
@@ -24,30 +29,67 @@ type ProcessedCell = {
   [a in AgeRange]?: number;
 };
 
+export type ArchData = {
+  population: number;
+  portion: number;
+};
+export type ProcessArchCell = {
+  year: number;
+  totalPopulation: number;
+  youth: ArchData;
+  young: ArchData;
+  senior: ArchData;
+};
+
 const Population = () => {
+  const { ref, animation, inView } = useObserver();
+  const [key, setKey] = useState(1);
+  useEffect(() => {
+    setKey((prev) => prev + 1);
+  }, [inView]);
   const {
     isLoading,
     isError,
     csvData: population,
   } = useFetchCSVData(apis.population);
-  let totalPopulationData: ProcessedCell[] = [];
 
-  if (population?.data) {
-    // 배열을 슬라이싱 후 원하는 배열 형태로 가공
-    totalPopulationData = processingPopulationData(
-      slice2DArray(population.data, {
-        row: { start: 0, end: 19 },
-        column: { start: 2, end: 51 },
-      }) as CSVRow[]
-    );
-  }
+  const {
+    isLoading: isArchLoading,
+    isError: isArchError,
+    csvData: arch,
+  } = useFetchCSVData(apis.populationArchitecture);
+  let totalPopulationData: ProcessedCell[] = [];
+  let populationArchitectureData: ProcessArchCell[] = [];
+
+  if (!population?.data) return <></>;
+  if (!arch?.data) return <></>;
+
+  totalPopulationData = processingPopulationData(
+    slice2DArray(population.data, {
+      row: { start: 0, end: 19 },
+      column: { start: 2, end: 51 },
+    }) as CSVRow[]
+  );
+
+  populationArchitectureData = processingArchitectureData(arch.data);
+
+  let selectedArchitecture = populationArchitectureData.filter(
+    (y) => y.year === 1990
+  )[0];
 
   return (
-    <DashboardContainer isLoading={isLoading} isError={isError}>
-      {totalPopulationData?.length > 0 && (
-        <p>데이터 수신 성공: {totalPopulationData.length}</p>
-      )}
-      {totalPopulationData.length === 0 && <p>데이터가 존재하지 않습니다...</p>}
+    <DashboardContainer
+      isLoading={isLoading && isArchLoading}
+      isError={isError && isArchError}
+    >
+      <motion.div
+        ref={ref}
+        initial='hidden'
+        animate={animation}
+        variants={opacityVariants}
+      >
+        <PopulationArchitecture architecture={selectedArchitecture} key={key} />
+      </motion.div>
     </DashboardContainer>
   );
 };
@@ -72,5 +114,52 @@ function processingPopulationData(arr: CSVRow[]) {
       }
     }
   }
+  return results;
+}
+
+function processingArchitectureData(arr: CSVRow[]) {
+  // 년도, 인구, 구성비,
+  const a = ['youth', 'young', 'senior'] as const;
+
+  const results: ProcessArchCell[] = [];
+
+  for (let row = 0; row < arr.length; row++) {
+    for (let col = 0; col < arr[row].length; col++) {
+      if (row === 0 && col === 0) continue;
+      if (col === 0) continue;
+      if (row === 0) {
+        results[col - 1] = {
+          year: parseInt(arr[row][col] as string),
+        } as ProcessArchCell;
+      } else if (row === 1) {
+        results[col - 1] = {
+          ...results[col - 1],
+          totalPopulation: parseInt(
+            (arr[row][col] as string).replaceAll(',', '')
+          ),
+        };
+      } else if (row >= 4 && row <= 6) {
+        const key = a[(row - 1) % 3];
+        results[col - 1] = {
+          ...results[col - 1],
+          [key]: {
+            ...results[col - 1][key],
+            portion: parseFloat(arr[row][col] as string),
+          },
+        };
+      } else if (row >= 7 && row <= 9) {
+        const key = a[(row - 1) % 3];
+
+        results[col - 1] = {
+          ...results[col - 1],
+          [key]: {
+            ...results[col - 1][key],
+            population: parseInt((arr[row][col] as string).replaceAll(',', '')),
+          },
+        };
+      }
+    }
+  }
+
   return results;
 }

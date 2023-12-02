@@ -58,8 +58,6 @@ export default function Aging() {
     []
   );
 
-  console.log(aging?.data);
-
   useEffect(() => {
     if (aging?.data && aging.data.length > 0) {
       const processedData = processingAgingData(aging.data);
@@ -67,51 +65,47 @@ export default function Aging() {
     }
   }, [aging]);
 
-  console.log(processedAgingData);
-
   return (
     <DashboardContainer isLoading={isLoadingAging} isError={isErrorAging}>
-      {processedAgingData.length > 0 && (
-        <p>고령화 데이터 수신 완료 {processedAgingData.length}</p>
-      )}
-      {processedAgingData.length === 0 && `데이터가 존재하지 않습니다.`}
-      <Line
-        data={{
-          labels: processedAgingData.map((data) => data.year),
-          datasets: [
-            // 고령 인구 데이터셋
-            {
-              label: '고령 인구',
-              data: processedAgingData.map((data) => data.oldPopulation),
-              borderColor: 'rgba(255,99,132,1)',
-              fill: false,
-            },
-          ],
-        }}
-        options={options}
-      />
+      <>
+        <Line
+          data={{
+            labels: processedAgingData.map((data) => data.year),
+            datasets: [
+              // 고령 인구 데이터셋
+              {
+                label: '고령 인구',
+                data: processedAgingData.map((data) => data.oldPopulation),
+                borderColor: 'rgba(255,99,132,1)',
+                fill: false,
+              },
+            ],
+          }}
+          options={options}
+        />
 
-      <Line
-        data={{
-          labels: processedAgingData.map((data) => data.year),
-          datasets: [
-            {
-              label: '고령화 지수',
-              data: processedAgingData.map((data) => data.aging),
-              borderColor: '#D4D4D4',
-              backgroundColor: processedAgingData.map((data) =>
-                data.aging !== null
-                  ? data.aging >= 14
-                    ? 'rgba(255,0,0,1)'
-                    : '#D4D4D4'
-                  : '#EF9034'
-              ),
-              pointRadius: 10,
-              fill: false,
-            },
-          ],
-        }}
-      />
+        <Line
+          data={{
+            labels: processedAgingData.map((data) => data.year),
+            datasets: [
+              {
+                label: '고령화 지수',
+                data: processedAgingData.map((data) => data.aging),
+                borderColor: '#D4D4D4',
+                backgroundColor: processedAgingData.map((data) =>
+                  data.aging !== null
+                    ? data.aging >= 14
+                      ? 'rgba(255,0,0,1)'
+                      : '#D4D4D4'
+                    : '#EF9034'
+                ),
+                pointRadius: 10,
+                fill: false,
+              },
+            ],
+          }}
+        />
+      </>
     </DashboardContainer>
   );
 }

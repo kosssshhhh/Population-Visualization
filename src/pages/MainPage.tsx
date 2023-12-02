@@ -10,6 +10,8 @@ import HeaderComponent from '../component/common/header/Header.component';
 import Aging from '../component/dashboardContainer/Aging.container';
 import { pageStyle } from '../@constants/style/style';
 import NewsHeadline from '../component/common/comments/NewsHeadline';
+import { initialNews } from '../@constants/news/newsHeadline';
+import Keywords from '../component/common/comments/Keywords';
 
 const MainPage = () => {
   return (
@@ -22,7 +24,8 @@ const MainPage = () => {
       </div>
       <div className={styles['dashboard-container']}>
         <HeaderComponent />
-        <NewsHeadline/>
+        <Keywords />
+        <NewsHeadline news={initialNews} />
         <Population />
         <Married />
         <InflationProvider>
