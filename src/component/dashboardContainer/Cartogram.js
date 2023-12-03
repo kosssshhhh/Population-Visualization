@@ -4,6 +4,7 @@ import * as d3 from 'd3';
 
 import useObserver from '../../hooks/useObserver';
 import { opacityVariants } from '../../@constants/animation/animation';
+import styles from './Cartogram.module.css';
 
 // import {
 //   Section,
@@ -428,8 +429,9 @@ const Cartogram = () => {
         initial='hidden'
         animate={animation}
         variants={opacityVariants}
+        className={styles.section}
       >
-        <div>
+        <div className={styles.container}>
           <div>
             <h1>카토그램으로 보는 '대한민국 지도'</h1>
             <div>아래 버튼을 눌러, 시대별 우리나라의 모습을 확인해보세요.</div>

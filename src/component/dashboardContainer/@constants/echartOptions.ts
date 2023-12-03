@@ -20,7 +20,7 @@ export const seriesOption = {
 export const chartOption = {
   grid: { top: 8, right: 8, bottom: 24, left: 36 },
   animationDuration: 5000,
-  width: '60%',
+  width: '80%',
   height: 'auto',
   textStyle: {
     color: '#fff',

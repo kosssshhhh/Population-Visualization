@@ -3,12 +3,14 @@
   justify-content: center;
 }
 .progress-container {
-  width: 15vw;
+  width: 12vw;
 }
 .dashboard-container {
-  flex: 1 1 auto;
+  /* flex: 1 1 auto; */
   display: flex;
   flex-direction: column;
+  width: 88vw;
+  padding: 0.5rem;
   /* align-items: center; */
   /* justify-content: flex-start; */
 }

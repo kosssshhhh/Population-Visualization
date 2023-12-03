@@ -42,7 +42,7 @@ export default function NewsHeadline({ news }: Props) {
           <p className={styles.paragraph}>
             이제 인구문제는 가볍게만 받아드려야할 문제가 아닌
           </p>
-          <p>눈 앞에 직면한 문제입니다.</p>
+          <p>우리 삶에 큰 영향을 끼칠 문제입니다.</p>
         </div>
       </motion.div>
     </>

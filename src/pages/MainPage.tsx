@@ -14,6 +14,11 @@ import AgingIndex from '../component/dashboardContainer/AgingIndex.container';
 import PopulationPyramid from '../component/dashboardContainer/PopulationPyramid.container';
 import { initialNews } from '../@constants/news/newsHeadline';
 import Keywords from '../component/common/comments/Keywords';
+import MarriedNews from '../component/common/comments/MarriedNews';
+import PriceNews from '../component/common/comments/PriceNews';
+import AgingNews from '../component/common/comments/AgingNews';
+import CityConcentrateNews from '../component/common/comments/CityConcentrateNews';
+import EmptyHouseMap from '../component/dashboardContainer/EmptyHouseMap/EmptyHouseMap';
 
 const MainPage = () => {
   return (
@@ -29,13 +34,18 @@ const MainPage = () => {
         <Keywords />
         <NewsHeadline news={initialNews} />
         <Population />
+        <MarriedNews />
         <Married />
+        <PriceNews />
         <InflationProvider>
           <Inflation />
         </InflationProvider>
+        <AgingNews />
         <Aging />
+        <CityConcentrateNews />
         <Cartogram />
-        <AgingIndex />
+        <EmptyHouseMap/>
+        {/* <AgingIndex /> */}
       </div>
     </main>
   );

@@ -1,0 +1,18 @@
+.container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5rem;
+}
+
+.contents {
+  height: 70vh;
+  color: white;
+}
+
+.description {
+  font-size: 1.2rem;
+  margin-top: 2rem;
+  line-height: 2rem;
+}

@@ -1,9 +1,14 @@
+.section {
+  height: 100vh;
+}
 .container {
   display: inline-flex;
+  flex-direction: column;
   position: relative;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   align-items: flex-start;
-  height: 30vh;
+  height: 70vh;
+  width: 70vh;
 }

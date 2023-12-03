@@ -25,6 +25,8 @@ import useObserver from '../../hooks/useObserver';
 import { motion } from 'framer-motion';
 import { opacityVariants } from '../../@constants/animation/animation';
 
+import styles from './Inflation.module.css';
+
 // 사교육비, 물가, 주택 가격
 function Inflation() {
   let chart = useRef<ECharts>();
@@ -101,6 +103,7 @@ function Inflation() {
 
   const options = {
     ...chartOption,
+    width: '70%',
     xAxis: {
       type: 'category',
       data: eduDataset?.data.map((item) => item.x),
@@ -166,12 +169,14 @@ function Inflation() {
         initial='hidden'
         animate={animation}
         variants={opacityVariants}
+        className={styles.container}
       >
         <ReactECharts
           onChartReady={onChartReadyCallback}
           option={options}
           onEvents={onEvents}
           key={key}
+          style={{ width: '100%' }}
         />
         <Detail eduPriceData={eduPriceData} wageData={wageData} />
       </motion.div>

@@ -9,6 +9,7 @@ import { chartOption, seriesOption } from './@constants/echartOptions';
 import useObserver from '../../hooks/useObserver';
 import { opacityVariants } from '../../@constants/animation/animation';
 import { motion } from 'framer-motion';
+import styles from './Married.module.css';
 
 export default function Married() {
   const { ref, animation, inView } = useObserver();
@@ -71,8 +72,9 @@ export default function Married() {
         initial='hidden'
         animate={animation}
         variants={opacityVariants}
+        className={styles.container}
       >
-        <ReactECharts option={options} key={key} />
+        <ReactECharts option={options} key={key} style={{width: '70vw'}} />
       </motion.div>
     </DashboardContainer>
   );
