@@ -35,11 +35,11 @@ export default function ScrollKeyword() {
 
     const currentPercent: number = scrollTop / windowHeight;
     // 스크롤바 크기 기준으로 scrollTop이 내려온만큼에 따라 계산 (계산시 소수점 둘째자리까지 반환)
+    console.log(currentPercent * 100, scrollTop);
 
     setHeight(currentPercent * 100);
     // 소수점 둘째자리 까지이므로, 100을 곱하여 정수로 만들어줍니다.
 
-    console.log(percents, currentPercent);
 
     setScrolled(percents.map((percent) => percent < currentPercent * 100));
   }, [percents]);
@@ -70,7 +70,6 @@ export default function ScrollKeyword() {
       pElem.classList.add(`${styles.text}`);
       pElem.style.top = `${percent}%`;
       // pElem.style.position = 'relative';
-      console.log(item);
 
       ref.current.appendChild(pElem);
       percents.push(percent);

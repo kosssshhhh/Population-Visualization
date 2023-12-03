@@ -18,21 +18,24 @@ export default function MarriedNews() {
       <div>
         <div className={styles.contents}>
           <p className={styles.headline}>
-            9월까지 이혼 1873건…혼인은 3.8% 감소, 출생아 수도 하락세
+            ‘결혼이 사라진다’ 작년 혼인, 19.3만건 ‘역대 최저’... “감소속도 4배
+            빨라져”
           </p>
           <p className={styles.news}>
-            가임 여성 한 명이 평생 낳을 것으로 예상되는 출생아 수가 1명도 안
-            된다는 것. <br />
-            낮아지는 혼인율에 발 맞춰 출생아 수가 줄어드는 흐름을 감안하면 4분기{' '}
-            <strong className={styles2.highlight}>0.6명대</strong>까지 떨어질
-            것으로 보인다. 통계청이 29일 발표한 '9월 인구동향'에 따르면 대전
-            3분기 합계출산율은 0.75명으로 1년 전보다 0.16명 줄었다. 올해 3분기
-            기준 <strong className={styles2.highlight}>가장</strong>{' '}
-            <strong className={styles2.highlight}>낮은</strong>{' '}
-            <strong className={styles2.highlight}>수치</strong>다.
+            문제는 혼인건수 감소 속도가 점차 빨라지고 있다는 점이다. 혼인건수가
+            30만건에서 20만건으로 감소하는데{' '}
+            <strong className={styles2.highlight}>19년</strong>(1997년~2015년)이
+            걸렸다. 하지만 혼인건수가 20만건에서 10만건까지 오는데 걸린 시간은{' '}
+            <strong className={styles2.highlight}>5년</strong>(2016년~2020년)
+            밖에 걸리지 않았다. 사실상 혼인건수 감소속도가{' '}
+            <strong className={styles2.highlight}>4배</strong> 빨라진 셈이다.
+            <br />
+            통계청 관계자는 “인구 감소와 코로나19 영향에 따른 결혼지연, 결혼에
+            대한 의식 변화 등으로 혼인과 이혼건수가 줄고 있다”며 “지난해의 경우,
+            혼인 건수가 통계 작성 52년 만에 최저치를 기록하게 됐다”고 했다.
           </p>
           <p className={styles.quote}>
-            출처:https://www.newstnt.com/news/articleView.html?idxno=323518
+            출처:https://biz.chosun.com/policy/policy_sub/2022/03/17/6ZICOJGSJNASJE5SB4XBRPY6HY/
           </p>
         </div>
       </div>
