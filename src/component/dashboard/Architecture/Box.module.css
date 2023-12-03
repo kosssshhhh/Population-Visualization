@@ -53,4 +53,5 @@
   color: black;
   position: absolute;
   transform: translate(25%, -100%);
+  z-index: 100;
 }

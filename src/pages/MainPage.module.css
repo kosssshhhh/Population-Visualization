@@ -4,6 +4,10 @@
 }
 .progress-container {
   width: 12vw;
+  min-width: 12vw;
+  color: white;
+  position: relative;
+  /* display: flex; */
 }
 .dashboard-container {
   /* flex: 1 1 auto; */
@@ -11,6 +15,7 @@
   flex-direction: column;
   width: 88vw;
   padding: 0.5rem;
+
   /* align-items: center; */
   /* justify-content: flex-start; */
 }

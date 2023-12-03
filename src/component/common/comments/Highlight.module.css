@@ -1,0 +1,29 @@
+p > .highlight {
+  font-weight: 400;
+}
+p > .highlight::after {
+  bottom: -0.2rem;
+  height: 0.5rem;
+  left: -0.25rem;
+  right: -0.25rem;
+}
+
+.highlight {
+  position: relative;
+}
+
+.highlight::after {
+  content: '';
+  position: absolute;
+  bottom: -0.125rem;
+  left: -0.5rem;
+  right: -0.5rem;
+  height: 0.75rem;
+
+  z-index: -1;
+
+  background-image: url('../underline/underline.svg');
+  background-repeat: repeat;
+
+  background-size: cover;
+}

@@ -1,0 +1,17 @@
+.container {
+  width: 6vw;
+  height: 80vh;
+  position: fixed;
+  left: 3vw;
+  top: 10vh;
+  /* border: 1px solid lightgray; */
+}
+.text {
+  font-size: 10px;
+  font-weight: 700;
+  transition: 1s all;
+  position: absolute;
+}
+.text.scrolled {
+  color: orange;
+}

@@ -1,5 +1,6 @@
 .container {
   height: 100vh;
+  min-width: 1000px;
   color: white;
   font-size: 1.3rem;
   box-sizing: border-box;

@@ -6,6 +6,7 @@ import React, {
   MouseEvent,
 } from 'react';
 import styles from './ScrollProgress.module.css';
+import { relative } from 'path';
 
 const ScrollProgress = () => {
   // 스크롤 진행도에 따른 width 상태 관리
@@ -52,12 +53,6 @@ const ScrollProgress = () => {
         const { clientX, clientY } = e;
         const clickedY = clientY - innerHeight * 0.1;
 
-        console.log('scrollWidth', scrollWidth);
-
-        console.log('clickedY', clickedY);
-        console.log('progressHeight', progressHeight);
-        console.dir(progressRef.current);
-
         // 선택한 x좌표(px)가 scrollWidth(px) 의 몇퍼센트인지 계산
         // const selectedPercent: number = (clientX / scrollWidth) * 100;
         const selectedPercent: number = (clickedY / progressHeight) * 100;
@@ -65,17 +60,10 @@ const ScrollProgress = () => {
         setHeight(selectedPercent);
 
         const windowHeight: number = scrollHeight - innerHeight;
-        console.log('innerHeight', innerHeight, 'scrollHeight', scrollHeight);
 
         // 스크롤바 크기에서 선택한 좌표의 퍼센트가 몇(px)인지 계산
         const moveScrollPercent: number =
           (windowHeight * selectedPercent) / 100;
-
-        console.log('moveScrollPercent', moveScrollPercent);
-        console.log('selecedPercent', selectedPercent);
-        console.log('windowHeight', windowHeight);
-
-        // console.log(windowHeight, selectedPercent);
 
         window.scrollTo({
           top: moveScrollPercent,

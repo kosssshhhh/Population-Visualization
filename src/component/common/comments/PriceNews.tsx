@@ -6,6 +6,7 @@ import {
 import styles from './PriceNews.module.css';
 import useObserver from '../../../hooks/useObserver';
 import { motion } from 'framer-motion';
+import styles2 from './Highlight.module.css';
 
 export default function PriceNews() {
   const { ref: ref1, animation: animation1 } = useObserver();
@@ -21,17 +22,20 @@ export default function PriceNews() {
           className={styles.contents}
         >
           <h3 className={styles.headline}>
-            사교육비·보육비 줄여야 저출산 해법 보인다
+            <strong className={styles2.highlight}>사교육비·보육비</strong>{' '}
+            줄여야 저출산 해법 보인다
           </h3>
           <p className={styles.news}>
             사교육비가 커질수록 그 부담으로 출산율이 줄어든다는 것이다. <br />
-            아닌 게 아니라 젊은 부부들에게 아이 낳기를 꺼리는 이유를 물어보면
-            사교육비와 보육 문제가 제일 심각하다고 한다. <br />
-            2022년 약 26조 원에 달하는 우리나라의 사교육비는 청년 부부의 가계에
-            매우 큰 부담이 된다. <br />
-            2021년 OECD 교육통계에 의하면 교 비 전체에서 사교육비가 차지하는
-            비율은 OECD 국가 평균이 16%인데 우리는 그 두 배가 넘는 36%에 달한다
-            <br />
+            아닌 게 아니라 젊은 부부들에게 아이 낳기를 꺼리는 이유를 물어보면{' '}
+            <strong className={styles2.highlight}>사교육비와</strong>{' '}
+            <strong className={styles2.highlight}>보육 문제</strong>가 제일
+            심각하다고 한다. 2022년 약 26조 원에 달하는 우리나라의 사교육비는
+            청년 부부의 가계에 매우 큰 부담이 된다. 2021년 OECD 교육통계에
+            의하면 교육비 전체에서 사교육비가 차지하는 비율은 OECD 국가 평균이{' '}
+            <strong className={styles2.highlight}>16%</strong>
+            인데 우리는 그 두 배가 넘는{' '}
+            <strong className={styles2.highlight}>36%</strong>에 달한다
           </p>
           <p className={styles.quote}>
             출처: https://www.skyedaily.com/news/news_view.html?ID=189200
@@ -54,7 +58,9 @@ export default function PriceNews() {
             총체적·실효적 방안을 서둘러 마련하고 꾸준히 실행에 옮기지 않는다면
             국가 파멸 수준의 결혼 기피 현상과 저출생을 막을 길은 요원하다.
             <br />
-            청년층이 결혼과 출산을 꺼리는 이유는 경제적 이유가 가장 크다.
+            청년층이 결혼과 출산을 꺼리는 이유는{' '}
+            <strong className={styles2.highlight}>경제적</strong>{' '}
+            <strong className={styles2.highlight}>이유</strong>가 가장 크다.
             <br />
             3,000만~4,000만 원에 달하는 결혼 비용부터 집 구입, 보육과
             사교육비까지 엄두를 내기 힘들다고들 한다. 고용 불안도 크다.

@@ -19,6 +19,7 @@ import PriceNews from '../component/common/comments/PriceNews';
 import AgingNews from '../component/common/comments/AgingNews';
 import CityConcentrateNews from '../component/common/comments/CityConcentrateNews';
 import EmptyHouseMap from '../component/dashboardContainer/EmptyHouseMap/EmptyHouseMap';
+import ScrollKeyword from '../component/common/ScrollProgress/ScrollKeyword';
 
 const MainPage = () => {
   return (
@@ -28,6 +29,7 @@ const MainPage = () => {
     >
       <div className={styles['progress-container']}>
         <ScrollProgress />
+        <ScrollKeyword />
       </div>
       <div className={styles['dashboard-container']}>
         <HeaderComponent />
@@ -44,7 +46,7 @@ const MainPage = () => {
         <Aging />
         <CityConcentrateNews />
         <Cartogram />
-        <EmptyHouseMap/>
+        <EmptyHouseMap />
         {/* <AgingIndex /> */}
       </div>
     </main>

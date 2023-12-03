@@ -432,7 +432,7 @@ const Cartogram = () => {
         className={styles.section}
       >
         <div className={styles.container}>
-          <div>
+          <div className={styles.title}>
             <h1>카토그램으로 보는 '대한민국 지도'</h1>
             <div>아래 버튼을 눌러, 시대별 우리나라의 모습을 확인해보세요.</div>
           </div>
@@ -446,13 +446,14 @@ const Cartogram = () => {
             viewBox='300 150 540 400'
             preserveAspectRatio='xMidYMid meet'
           />
-        </div>
-        <div>
-          <span>
-            ※카토그램: 일반 지도를 통계치에 따라 바꾼 지도로, 인구가 많으면 많을
-            수록 면적이 커진다.
-          </span>
-          <span>(출처: KBS×KAIST 문화기술대학원 박주용 교수 연구실)</span>
+          <div className={styles.quote}>
+            <span>
+              ※카토그램: 일반 지도를 통계치에 따라 바꾼 지도로, 인구가 많으면
+              많을 수록 면적이 커진다.
+              <br />
+            </span>
+            <span>(출처: KBS×KAIST 문화기술대학원 박주용 교수 연구실)</span>
+          </div>
         </div>
       </motion.div>
     </>

@@ -1,17 +1,15 @@
 .scroll-progress {
-  /* width: 80vh; */
   width: 10px;
-  /* height: 10px; */
   height: 80vh;
   background-color: #d4d4d4;
   position: sticky;
   border-radius: 10px;
   /* 가장 상단에 고정 배치 */
   top: 10vh;
-  left: 1rem;
+  left: 1vw;
   right: 0;
   z-index: 10;
-  /* transform: rotate(90deg) */
+  color: white;
 }
 .progress {
   border-radius: 10px;

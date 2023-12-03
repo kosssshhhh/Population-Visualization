@@ -1,8 +1,9 @@
 import React from 'react';
-import styles from './MarriedNews.module.css';
 import useObserver from '../../../hooks/useObserver';
 import { motion } from 'framer-motion';
 import { opacityVariants } from '../../../@constants/animation/animation';
+import styles from './MarriedNews.module.css';
+import styles2 from './Highlight.module.css';
 
 export default function MarriedNews() {
   const { ref, animation } = useObserver();
@@ -22,11 +23,13 @@ export default function MarriedNews() {
           <p className={styles.news}>
             가임 여성 한 명이 평생 낳을 것으로 예상되는 출생아 수가 1명도 안
             된다는 것. <br />
-            낮아지는 혼인율에 발 맞춰 출생아 수가 줄어드는 흐름을 감안하면 4분기
-            0.6명대까지 떨어질 것으로 보인다. <br />
-            통계청이 29일 발표한 '9월 인구동향'에 따르면 대전 3분기 합계출산율은
-            0.75명으로 1년 전보다 0.16명 줄었다. <br />
-            올해 3분기 기준 가장 낮은 수치다.
+            낮아지는 혼인율에 발 맞춰 출생아 수가 줄어드는 흐름을 감안하면 4분기{' '}
+            <strong className={styles2.highlight}>0.6명대</strong>까지 떨어질
+            것으로 보인다. 통계청이 29일 발표한 '9월 인구동향'에 따르면 대전
+            3분기 합계출산율은 0.75명으로 1년 전보다 0.16명 줄었다. 올해 3분기
+            기준 <strong className={styles2.highlight}>가장</strong>{' '}
+            <strong className={styles2.highlight}>낮은</strong>{' '}
+            <strong className={styles2.highlight}>수치</strong>다.
           </p>
           <p className={styles.quote}>
             출처:https://www.newstnt.com/news/articleView.html?idxno=323518
@@ -36,5 +39,3 @@ export default function MarriedNews() {
     </motion.div>
   );
 }
-
-

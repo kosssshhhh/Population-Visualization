@@ -122,6 +122,9 @@ blockquote,
 q {
   quotes: none;
 }
+p {
+  word-break: keep-all;
+}
 blockquote:before,
 blockquote:after,
 q:before,
