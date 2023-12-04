@@ -154,15 +154,13 @@ const Population = () => {
   return (
     <DashboardContainer
       isLoading={isLoadingAging && isArchLoading}
-      isError={isErrorAging && isArchError}
-    >
+      isError={isErrorAging && isArchError}>
       <motion.div
         ref={ref}
         initial='hidden'
         animate={animation}
         variants={opacityVariants}
-        className={styles.container}
-      >
+        className={styles.container}>
         <div className={styles['pyramid-container']}>
           <Bar
             options={{
@@ -220,7 +218,40 @@ const Population = () => {
             step={5}
             value={selectedYear}
             onChange={handleYearChange}
+            list='tickmarks'
           />
+          {/* <datalist
+            id='tickmarks'
+            style={{
+              fontSize: '1rem',
+              color: 'white',
+              display: 'grid',
+              gridAutoFlow: 'colum',
+            }}>
+            {processedPopulationData.map((data, index) => (
+              <option key={index} value={data.year}>
+                {data.year}
+              </option>
+            ))}
+          </datalist> */}
+
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              marginLeft: '10px',
+            }}>
+            {processedPopulationData.map((data, index) => (
+              <span
+                key={index}
+                style={{
+                  color: '#5E5E5E',
+                  fontSize: '10px',
+                }}>
+                {data.year}
+              </span>
+            ))}
+          </div>
         </div>
         <PopulationArchitecture architecture={selectedArchitecture} key={key} />
       </motion.div>

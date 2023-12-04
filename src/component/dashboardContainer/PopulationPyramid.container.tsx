@@ -145,6 +145,13 @@ export default function PopulationPyramid() {
         value={selectedYear}
         onChange={handleYearChange}
       />
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        {processedPopulationData.map((data, index) => (
+          <span key={index} style={{ color: 'white' }}>
+            {data.year}
+          </span>
+        ))}
+      </div>
     </DashboardContainer>
   );
 }
