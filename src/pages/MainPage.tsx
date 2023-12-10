@@ -21,6 +21,7 @@ import CityConcentrateNews from '../component/common/comments/CityConcentrateNew
 import EmptyHouseMap from '../component/dashboardContainer/EmptyHouseMap/EmptyHouseMap';
 import ScrollKeyword from '../component/common/ScrollProgress/ScrollKeyword';
 import EmptyHouse from '../component/common/comments/EmptyHouse';
+import Conclusion from '../component/common/comments/Conclusion';
 
 const MainPage = () => {
   return (
@@ -50,6 +51,7 @@ const MainPage = () => {
         <EmptyHouse />
         <EmptyHouseMap />
         {/* <AgingIndex /> */}
+        <Conclusion/>
       </div>
     </main>
   );
